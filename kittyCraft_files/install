@@ -1,0 +1,6 @@
+copy /include/#? sdk:Include/include_h/ all
+
+IF EXISTS kittycraft.library
+copy kittycraft.library libs:
+avail flush
+endif

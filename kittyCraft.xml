@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE library SYSTEM "library.dtd">
+<library name="kittyCraft" basename="kittyCraftBase" openname="kittycraft.library">
+	<include>exec/types.h</include>
+	<include>libraries/kittycraft.h</include>
+	<interface name="main" version="1.0" struct="kittyCompactIFace" prefix="_kittycraft_" asmprefix="IkittyCraft" global="IkittyCraft">
+		<method name="Obtain" result="ULONG"/>
+		<method name="Release" result="ULONG"/>
+		<method name="Expunge" result="void" status="unimplemented"/>
+		<method name="Clone" result="struct Interface *" status="unimplemented"/>
+		<method name="makeLookupTable" result="char *">
+		</method>
+		<method name="FreeLookupTable" result="void">
+			<arg name="table" type="void *"/>
+		</method>
+	</interface>
+</library>
+
