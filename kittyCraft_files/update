@@ -28,5 +28,5 @@ copy ram:temp/kittyCraft_files/kittyCraft_vectors.c ""
 copy ram:temp/kittyCraft_files/kittyCraft_vectors.h ""
 xcopy ram:temp/kittyCraft_files/main main NOREP ALL QUIET
 
-;delete QUIET ram:temp all 
+delete QUIET ram:temp all 
 

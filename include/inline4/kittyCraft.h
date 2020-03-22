@@ -28,5 +28,7 @@
 /* Inline macros for Interface "main" */
 #define makeLookupTable() IkittyCraft->makeLookupTable() 
 #define FreeLookupTable(table) IkittyCraft->FreeLookupTable((table)) 
+#define makeContext() IkittyCraft->makeContext() 
+#define FreeContext(table) IkittyCraft->FreeContext((table)) 
 
 #endif /* INLINE4_KITTYCRAFT_H */

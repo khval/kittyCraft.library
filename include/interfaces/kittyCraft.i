@@ -16,6 +16,8 @@ STRUCTURE kittyCompactIFace, InterfaceData_SIZE
 	    FPTR IkittyCraft_Clone
 	    FPTR IkittyCraft_makeLookupTable
 	    FPTR IkittyCraft_FreeLookupTable
+	    FPTR IkittyCraft_makeContext
+	    FPTR IkittyCraft_FreeContext
 	LABEL kittyCompactIFace_SIZE
 
 #endif
