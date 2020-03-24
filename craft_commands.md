@@ -1,16 +1,16 @@
-s$=Up Case$(s$)
+**s$=Up Case$(s$)**
  
   Convert to uppercase
  
-s$=Lo Case$(s$)
+**s$=Lo Case$(s$)
  
  Convert to lowercase
  
-s$=Flip Case$(s$)
+**s$=Flip Case$(s$)
 
  swap upper and lowercase. 
  
-s$=Left Trim$(s$,s$)
+**s$=Left Trim$(s$,s$)
  
 s$=Left Trim$(s$)
 
