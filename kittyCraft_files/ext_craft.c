@@ -144,17 +144,186 @@ char *craftFlipCaseSTR KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftLeftTrimSTR( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	struct stringData *str,*remove;
+	struct stringData *newStr;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	api.dumpStack();
+
+	switch (args)
+	{
+		case 1:
+			{
+				char *src;
+				int toRemove = 0;
+				int n;
+				str = getStackString( instance,__stack);
+
+				src = &(str -> ptr);
+				for (n=0;n<str->size;n++)
+				{
+					if ( src[n] != ' ' ) break;
+					toRemove ++;
+				}
+
+				newStr = amos_right( str, str->size - toRemove );
+				setStackStr( instance, newStr);
+			}
+			return NULL;
+
+		case 2:
+			str = getStackString( instance,__stack -1);
+			remove = getStackString( instance,__stack);
+			break;
+
+		default:
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+	{
+		char *src = &(str -> ptr);
+		char *d = &(remove -> ptr);
+		int toRemove = 0;
+		char c;
+		int n;
+		int n2;
+		bool found;
+
+		for (n=0;n<str->size;n++)
+		{
+			c = src[n];
+
+			found = false;
+			for (n2=0;n2<remove -> size;n2++)
+			{
+				printf("%c is %c?\n",d[n2],c);
+
+				if (d[n2] == c )
+				{
+					printf("%c",c);
+
+					found = true;
+					break;
+				}
+			}
+
+			if (found == false)	 break;
+
+			toRemove ++;
+		}
+
+		newStr = amos_right( str, str->size - toRemove );
+	}
+
+	popStack( instance, instance_stack - data->stack );
+
+	setStackStr( instance, newStr);
+	return NULL;
+}
+
 char *craftLeftTrimSTR KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftLeftTrimSTR, tokenBuffer );
 	return tokenBuffer;
+}
+
+char *_craftRightTrimSTR( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	struct stringData *str,*remove;
+	struct stringData *newStr;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	api.dumpStack();
+
+	switch (args)
+	{
+		case 1:
+			{
+				char *src;
+				int toRemove = 0;
+				int n;
+				str = getStackString( instance,__stack);
+
+				src = &(str -> ptr);
+				for (n=str->size-1;n>-1;n--)
+				{
+					printf("[%d]=%c\n",n,src[n]);
+
+					if ( src[n] != ' ' ) break;
+					toRemove ++;
+				}
+
+				printf("remove %d\n", toRemove);
+
+				newStr = amos_strndup( str, str->size - toRemove );
+				setStackStr( instance, newStr);
+			}
+			return NULL;
+
+		case 2:
+			str = getStackString( instance,__stack -1);
+			remove = getStackString( instance,__stack);
+			break;
+
+		default:
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+	{
+		char *src = &(str -> ptr);
+		char *d = &(remove -> ptr);
+		int toRemove = 0;
+		char c;
+		int n;
+		int n2;
+		bool found;
+
+		for (n=str->size-1;n>-1;n--)
+		{
+			c = src[n];
+
+			found = false;
+			for (n2=0;n2<remove -> size;n2++)
+			{
+				if (d[n2] == c )
+				{
+					found = true;
+					break;
+				}
+			}
+
+			if (found == false)	 break;
+
+			toRemove ++;
+		}
+
+		newStr = amos_strndup( str, str->size - toRemove );
+	}
+
+	popStack( instance, instance_stack - data->stack );
+
+	setStackStr( instance, newStr);
+
+	return NULL;
 }
 
 char *craftRightTrimSTR KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftRightTrimSTR, tokenBuffer );
 	return tokenBuffer;
 }
 
