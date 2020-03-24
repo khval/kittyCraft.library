@@ -72,7 +72,6 @@ char * _kittycraft_makeLookupTable(struct kittyCompactIFace *Self)
 
 	for (cmd=AMOSPro_CRAFT;cmd -> fn;cmd++)
 	{
-		Printf("%08lx\n",((char *(**) KITTENS_CMD_ARGS) (ptr + cmd -> token)));
 		*((char *(**) KITTENS_CMD_ARGS) (ptr + cmd -> token)) = cmd -> fn;
 	}
 
