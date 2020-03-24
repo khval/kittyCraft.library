@@ -34,24 +34,113 @@
 #define alloc_private(x) AllocVecTags( x , AVT_Type, MEMF_PRIVATE, TAG_END )
 #define alloc_shared(x) AllocVecTags( x , AVT_Type, MEMF_SHARED, TAG_END )
 
+#define proc_names_printf printf
+
+char *_craftUpCaseSTR(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	struct stringData *str;
+	char *s;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	if (args !=1)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+
+	str = getStackString( instance,__stack );
+	if (str)
+	{
+		for (s=&str -> ptr;*s;s++) if ((*s>='a')&&(*s<='z')) *s+=('A'-'a');
+	}
+
+	return NULL;
+}
+
 char *craftUpCaseSTR KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+
+	stackCmdParm( _craftUpCaseSTR, tokenBuffer );	// we need to store the step counter.
 	return tokenBuffer;
+}
+
+char *_craftLoCaseSTR( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	struct stringData *str;
+	char *s;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	if (args !=1)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+
+	str = getStackString( instance,__stack );
+	if (str)
+	{
+		for (s=&str ->ptr;*s;s++) if ((*s>='A')&&(*s<='Z')) *s-=('A'-'a');
+	}
+
+	return NULL;
 }
 
 char *craftLoCaseSTR KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftLoCaseSTR, tokenBuffer );
 	return tokenBuffer;
 }
+
+char *_craftFlipCaseSTR( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	struct stringData *str;
+	char *s;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	if (args !=1)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+
+	str = getStackString( instance,__stack );
+	if (str)
+	{
+		for (s=&str ->ptr;*s;s++)
+		{
+			if ((*s>='A')&&(*s<='Z'))
+			{
+				 *s-=('A'-'a');
+			}
+			else if ((*s>='a')&&(*s<='z'))
+			{
+				 *s-=('a'-'A');
+			}
+		}
+	}
+
+	return NULL;
+}
+
 
 char *craftFlipCaseSTR KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftFlipCaseSTR, tokenBuffer );
 	return tokenBuffer;
 }
 
