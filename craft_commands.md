@@ -10,17 +10,23 @@
 
     swap upper and lowercase. 
  
-**s$=Left Trim$(s$,s$)**
-
 **s$=Left Trim$(s$)**
 
     Trim spaces on left side
 
-**s$=Right Trim$(s$,s$)**
+**s$=Left Trim$(s$,r$)**
+
+    Remove any char in r$, from s$
+    takes more then one char.
 
 **s$=Right Trim$(s$)**
 
     Trim spaces on right side
+
+**s$=Right Trim$(s$,r$)**
+
+    Remove any char in r$, from s$ 
+    takes more then one char.
 
 **n=Bw Instr(s$,s$,n)**
  
