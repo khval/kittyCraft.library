@@ -1,17 +1,27 @@
- s$=Up Case$(s$)
+s$=Up Case$(s$)
  
- s$=Lo Case$(s$)
+  Convert to uppercase
  
- s$=Flip Case$(s$)
+s$=Lo Case$(s$)
  
- s$=Left Trim$(s$,s$)
+ Convert to lowercase
  
- s$=Left Trim$(s$)
+s$=Flip Case$(s$)
+
+ swap upper and lowercase. 
  
+s$=Left Trim$(s$,s$)
+ 
+s$=Left Trim$(s$)
+
+ Trim spaces on left side
+
  s$=Right Trim$(s$,s$)
  
- s$=Right Trim$(s$)
- 
+s$=Right Trim$(s$)
+
+ Trim spaces on right side
+
  n=Bw Instr(s$,s$,n)
  
  n=Bw Instr(s$,s$)
