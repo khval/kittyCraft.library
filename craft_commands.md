@@ -28,20 +28,36 @@
     Remove any char in r$, from s$ 
     takes more then one char.
 
-**n=Bw Instr(s$,s$,n)**
+**n=Bw Instr(txt$,item$)**
+
+	Return first position.
+
+**n=Bw Instr(txt$,item$,n)**
+
+	Return first position, 
+	limited by n number of chars.
  
-**n=Bw Instr(s$,s$)**
+**s$=Chr Conv$(s$,char1 To char2)**
+
+	Replace char1 with char2 (ascii value)
  
-**s$=Chr Conv$(s$,n To n)**
+**n=Str Count(txt$,item$)**
  
-n=Str Count(s$,s$)
- 
-n=Mem Str Count(n To n,s$)
- 
-n=Mem Str Count(n,s$)
+	Count the number of item$ in txt$
+
+**n=Mem Str Count(n,s$)**
+
+    So this one gives a illigal function call on AmosPro_Craft.lib,
+    but there is no reason way it should not work.
+
+    So in KittyCraft.library, it looks for the word until it finds memory address is 0 terminated.
+
+**n=Mem Str Count([start] To [end],item$)**
+
+    Find item$ in memory from [start] to [end].
  
 s$=Str Scramble$(s$,s$)
- 
+
 s$=Str Unscramble$(s$,s$)
  
 s$=Hex Dump$(n,n,n)
