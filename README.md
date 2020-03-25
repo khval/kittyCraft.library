@@ -1,10 +1,13 @@
 # kittyCraft.library
 Extension for Amos Kittens.
 
-Only a few commands are implemented.
 **work in porgress.**
+
+Only the commands that have a description is implemented.
+
+https://github.com/khval/kittyCraft.library/blob/master/craft_commands.md
 
 **Most commands are not implemented**
 
-	Most command that is called from this extension will return an error.
+	this commands will return an error.
 	and the program will quit.
