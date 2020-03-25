@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <math.h>
 
 #ifdef __amigaos4__
 #include <proto/exec.h>
@@ -22,8 +23,8 @@
 #include <amosString.h>
 #include "stack.h"
 
+#include "kittyCraft.library_rev.h"
 #include <kittyErrors.h>
-
 #include "cmdList.h"
 
 #define kittyError instance->kittyError
@@ -35,6 +36,8 @@
 #define alloc_shared(x) AllocVecTags( x , AVT_Type, MEMF_SHARED, TAG_END )
 
 #define proc_names_printf printf
+
+#define max(a,b) ((a)>(b)?(a):(b))
 
 char *_craftUpCaseSTR(  struct glueCommands *data, int nextToken )
 {
@@ -327,31 +330,242 @@ char *craftRightTrimSTR KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftBwInstr(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	struct stringData *txt=NULL,*item=NULL;
+	int size;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	api.dumpStack();
+
+	switch (args)
+	{
+		case 2:
+			txt = getStackString( instance,__stack-1 );
+			item = getStackString( instance,__stack );
+			size = txt->size;
+			break;
+
+		case 3:
+			txt = getStackString( instance,__stack-2 );
+			item = getStackString( instance,__stack-1 );
+			size = getStackNum( instance,__stack );
+			size = size < txt->size ? size : txt->size;
+			break;
+
+
+		default:
+
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+
+	if ((txt)&&(item))
+	{
+		char *ptr = &txt -> ptr;
+		char *itemPtr = &item -> ptr;
+
+		size -= max(item -> size - 1,0);
+		int n,ret =0;
+
+		printf("size: %d\n",size);
+
+		for (n=0;n<size;n++)
+		{
+			printf("%s--%s\n",ptr+n,itemPtr);
+
+			if (strncasecmp(ptr+n,itemPtr,item->size)==0)
+			{
+				ret = n+1;
+				break;
+			}
+		}
+		
+		popStack( instance, instance_stack - data->stack );
+		setStackNum( instance, ret );
+	}
+
+	return NULL;
+}
+
 char *craftBwInstr KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftBwInstr, tokenBuffer );
 	return tokenBuffer;
 }
+
+
+char *_craftChrConvSTR(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	switch (args)
+	{
+		case 3:
+			{
+				unsigned char *c;
+				struct stringData *txt = getStackString( instance,__stack-2 );
+				unsigned char from = (unsigned char) getStackNum( instance,__stack-1 );
+				unsigned char to = (unsigned char) getStackNum( instance,__stack );
+
+				c = (unsigned char *) &txt -> ptr;
+				while (*c)
+				{
+					if (*c == from) *c=to;
+					c++;
+				}
+
+				popStack( instance, 1 );	// free two. (this, and current)
+				instance_stack--;		// do not change txt string 
+			}
+			return NULL;
+
+		default:
+
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+	return NULL;
+}
+
 
 char *craftChrConvSTR KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftChrConvSTR, tokenBuffer );
 	return tokenBuffer;
+}
+
+char *_craftStrCount(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	struct stringData *txt=NULL,*item=NULL;
+	int size;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	api.dumpStack();
+
+	switch (args)
+	{
+		case 2:
+			txt = getStackString( instance,__stack-1 );
+			item = getStackString( instance,__stack );
+			size = txt->size;
+			break;
+
+		default:
+
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+
+	if ((txt)&&(item))
+	{
+		int n,ret =0;
+		char *ptr = &txt -> ptr;
+		char *itemPtr = &item -> ptr;
+		size -= max(item -> size - 1,0);
+
+		for (n=0;n<size;n++)
+		{
+			if (strncasecmp(ptr+n,itemPtr,item->size)==0) ret++;
+		}
+		
+		popStack( instance, instance_stack - data->stack );
+		setStackNum( instance, ret );
+	}
+
+	return NULL;
 }
 
 char *craftStrCount KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftStrCount, tokenBuffer );
 	return tokenBuffer;
+}
+
+char *_craftMemStrCount(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	int cnt = 0;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	printf("args: %d\n",args);
+
+	api.dumpStack();
+
+	switch (args)
+	{
+		case 2:
+			{
+				char *adr = (char *) getStackNum( instance,__stack -1 );
+				struct stringData *item = getStackString( instance,__stack );
+
+				printf("adr %08x\n",  (unsigned int) adr);
+
+				while (*adr)
+				{
+					printf("%s\n",adr);
+					if (strncasecmp(adr,&item ->ptr,item -> size)==0)	 cnt++;
+					adr++;
+				}
+				popStack( instance, instance_stack - data->stack );
+				setStackNum( instance, cnt );
+				return NULL;
+			}
+			break;
+
+		case 3:
+			{
+				char *adr = (char *) getStackNum( instance,__stack -2 );
+				char *adrTo= (char *) getStackNum( instance,__stack -1 );
+				struct stringData *item = getStackString( instance,__stack );
+
+				while (adr<adrTo)
+				{
+					if (strncasecmp(adr,&item ->ptr,item -> size)==NULL)	 cnt++;
+					adr++;
+				}
+				popStack( instance, instance_stack - data->stack );
+				setStackNum( instance, cnt );
+				return NULL;
+
+			}
+			break;
+
+		default:
+
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+
+	return NULL;
 }
 
 char *craftMemStrCount KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftMemStrCount, tokenBuffer );
 	return tokenBuffer;
 }
 
@@ -1211,7 +1425,9 @@ char *craftAmosBase KITTENS_CMD_ARGS
 char *craftCraftVersion KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+
+	setStackNum( instance, VERSION * 10 + REVISION );
+
 	return tokenBuffer;
 }
 

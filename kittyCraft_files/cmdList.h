@@ -1,7 +1,4 @@
 
-
-#warning works
-
 struct cmdData
 {
 	unsigned short token;
