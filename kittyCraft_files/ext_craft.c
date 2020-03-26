@@ -473,7 +473,6 @@ char *_craftStrCount(  struct glueCommands *data, int nextToken )
 			return NULL;
 	}
 
-
 	if ((txt)&&(item))
 	{
 		int n,ret =0;
@@ -489,7 +488,6 @@ char *_craftStrCount(  struct glueCommands *data, int nextToken )
 		popStack( instance, instance_stack - data->stack );
 		setStackNum( instance, ret );
 	}
-
 	return NULL;
 }
 
@@ -508,8 +506,6 @@ char *_craftMemStrCount(  struct glueCommands *data, int nextToken )
 
 	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
-	printf("args: %d\n",args);
-
 	api.dumpStack();
 
 	switch (args)
@@ -519,12 +515,9 @@ char *_craftMemStrCount(  struct glueCommands *data, int nextToken )
 				char *adr = (char *) getStackNum( instance,__stack -1 );
 				struct stringData *item = getStackString( instance,__stack );
 
-				printf("adr %08x\n",  (unsigned int) adr);
-
 				while (*adr)
 				{
-					printf("%s\n",adr);
-					if (strncasecmp(adr,&item ->ptr,item -> size)==0)	 cnt++;
+					if (strncasecmp(adr,&item ->ptr,item -> size)==0) cnt++;
 					adr++;
 				}
 				popStack( instance, instance_stack - data->stack );
@@ -541,7 +534,7 @@ char *_craftMemStrCount(  struct glueCommands *data, int nextToken )
 
 				while (adr<adrTo)
 				{
-					if (strncasecmp(adr,&item ->ptr,item -> size)==NULL)	 cnt++;
+					if (strncasecmp(adr,&item ->ptr,item -> size)==0) cnt++;
 					adr++;
 				}
 				popStack( instance, instance_stack - data->stack );
@@ -557,8 +550,6 @@ char *_craftMemStrCount(  struct glueCommands *data, int nextToken )
 			api.setError(22, data -> tokenBuffer);
 			return NULL;
 	}
-
-
 	return NULL;
 }
 
