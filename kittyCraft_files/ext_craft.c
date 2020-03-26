@@ -625,6 +625,8 @@ char *_craftHexDumpSTR(  struct glueCommands *data, int nextToken )
 {
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
+	char *adr = NULL;
+	int len = 0, sep =0;
 
 	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
@@ -635,41 +637,50 @@ char *_craftHexDumpSTR(  struct glueCommands *data, int nextToken )
 	switch (args)
 	{
 		case 2:
-			{
-				int n;
-				char *dest, *adr = (char *) getStackNum( instance,__stack -1);
-				int len = getStackNum( instance,__stack );
+			adr = (char *) getStackNum( instance,__stack -1);
+			len = getStackNum( instance,__stack );
+			sep = 4;
+			break;
 
-				struct stringData *newStr = alloc_amos_string( (len*2) + (len/4) );
-
-				dest = &newStr -> ptr;
-				for (n=0;n<len;n++)
-				{
-					if ( (n>0) && ( (n%4) == 0) )
-					{
-						sprintf( dest, " %02x", adr[n] );
-						dest +=3;
-					}
-					else 
-					{
-						sprintf( dest, "%02x", adr[n] );
-						dest +=2;
-					}
-				}
-
-				popStack( instance, instance_stack - data->stack );
-				setStackStr( instance, newStr );
-				return NULL;
-			}
+		case 3:
+			adr = (char *) getStackNum( instance,__stack -2);
+			len = getStackNum( instance,__stack-1 );
+			sep = getStackNum( instance,__stack );
 			break;
 
 		default:
-
 			popStack( instance, instance_stack - data->stack );
 			api.setError(22, data -> tokenBuffer);
 			return NULL;
 	}
 
+	{
+		int n, size;
+		char *dest;
+		struct stringData *newStr;
+
+		size = sep ? len*2 + len/sep : len*2 ;
+
+		newStr = alloc_amos_string( size );
+
+		dest = &newStr -> ptr;
+		for (n=0;n<len;n++)
+		{
+			if ( (n>0) && (sep) && ( (n%sep) == 0) )
+			{
+				sprintf( dest, " %02x", adr[n] );
+				dest +=3;
+			}
+			else 
+			{
+				sprintf( dest, "%02x", adr[n] );
+				dest +=2;
+			}
+		}
+
+		popStack( instance, instance_stack - data->stack );
+		setStackStr( instance, newStr );
+	}
 
 	return NULL;
 }
@@ -730,17 +741,142 @@ char *craftChrDumpSTR KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftStrPeekSTR(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	unsigned char *adr;
+	int len;
+	int termchar = -1;
+	struct stringData *newStr;
+	unsigned char *dest;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	printf("args: %d\n",args);
+
+	switch (args)
+	{
+		case 2:
+			{
+				adr = (unsigned char *) getStackNum( instance,__stack -1);
+				len = getStackNum( instance,__stack );
+			}
+			break;
+
+		case 3:
+			{
+				struct stringData *term;
+				adr = (unsigned char *) getStackNum( instance,__stack -2);
+				len = getStackNum( instance,__stack -1 );
+				term = getStackString( instance,__stack );
+				termchar = (int) ((unsigned char) term -> ptr);
+
+				printf("3 args\n");
+			}
+			break;
+
+		default:
+
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+	newStr = alloc_amos_string( len );
+	dest = (unsigned char *) &newStr -> ptr;
+
+	if (termchar==-1)
+	{
+		int n;
+
+		for (n=0;n<len;n++)
+		{
+			dest[n]=adr[n];
+		}
+
+		printf("written\n");
+	}
+	else
+	{
+		int n;
+		unsigned char c;
+
+		printf("len %d termchar %c\n",len,termchar);
+
+		for (n=0;n<len;n++)
+		{
+			c=adr[n];
+			if (c == (char) termchar ) 
+			{
+				printf("n %d\n",n);
+				newStr -> size  = n;
+				dest[n]=0; 
+				break; 
+			}
+			dest[n]=c;
+		}
+	}
+
+	popStack( instance, instance_stack - data->stack );
+	setStackStr( instance, newStr );
+
+	api.dumpStack();
+
+	return NULL;
+}
+
 char *craftStrPeekSTR KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftStrPeekSTR, tokenBuffer );
 	return tokenBuffer;
+}
+
+char *_craftStrPoke(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	unsigned char *address;
+	unsigned char *source;
+	struct stringData *str;
+	int n;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	api.dumpStack();
+
+	switch (args)
+	{
+		case 2:
+			{
+				address = (unsigned char *) getStackNum( instance,__stack -1);
+				str = getStackString( instance,__stack );
+			}
+			break;
+
+		default:
+
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+	source = (unsigned char *) &str -> ptr;
+	for (n=0;n<str->size;n++)
+	{
+		*address++=*source++;
+	}
+
+	setStackNone( instance );
+ 	instance_stack --;
+	return NULL;
 }
 
 char *craftStrPoke KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftStrPoke, tokenBuffer );
 	return tokenBuffer;
 }
 
