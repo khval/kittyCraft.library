@@ -71,19 +71,43 @@
     Dumps the first n bytes as hex, from Address.
     result stored in S$
 
-**s$=Hex Dump$(n,n,n)**
+**s$=Hex Dump$(address,len,bytes)**
+
+    insert a space between x number of bytes, if bytes is 0, then no space is inserted.
+
+    show hex dump in bytes
+
+    s$=Hex Dump$(address,len,1)
+
+    show hex dump in shorts    
+
+    s$=Hex Dump$(address,len,2)
+
+    show hex dump in ints32
+
+    s$=Hex Dump$(address,len,4)
+
+    show hex dump in int64
+
+    s$=Hex Dump$(address,len,8)
 
 **s$=Chr Dump$(n,n)**
 
     convert memory block to ascii string.
     0-31 and 128-159 converted to char 46
  
-s$=Str Peek$(n,n,s$)
+s$=Str Peek$(address,len)
+
+    fetch string from address, len is length of the string in memory,
+
+s$=Str Peek$(address,len,term$)
+
+    fetch string from address, len is length of the string in memory, term$ is the end of string.
+
+Str Poke [address],s$ 
  
-s$=Str Peek$(n,n)
- 
-Str Poke n,s$ 
- 
+    write string into [address]
+
 n=Chip Max Block  
  
 n=Fast Max Block  
