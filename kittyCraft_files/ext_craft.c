@@ -821,8 +821,6 @@ char *_craftStrPeekSTR(  struct glueCommands *data, int nextToken )
 	popStack( instance, instance_stack - data->stack );
 	setStackStr( instance, newStr );
 
-	api.dumpStack();
-
 	return NULL;
 }
 
@@ -883,21 +881,55 @@ char *craftStrPoke KITTENS_CMD_ARGS
 char *craftChipMaxBlock KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	setStackNum( instance, AvailMem( MEMF_CHIP | MEMF_LARGEST ) );
 	return tokenBuffer;
 }
 
 char *craftFastMaxBlock KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	setStackNum( instance, AvailMem( MEMF_FAST | MEMF_LARGEST ) );
 	return tokenBuffer;
+}
+
+char *_craftMemCopy(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	unsigned char *addressSource,*addressEnd,*addressDest;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	switch (args)
+	{
+		case 3:
+			{
+				addressSource = (unsigned char *) getStackNum( instance,__stack -2);
+				addressEnd = (unsigned char *) getStackNum( instance,__stack -1);
+				addressDest = (unsigned char *) getStackNum( instance,__stack );
+			}
+			break;
+
+		default:
+
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+	for (;addressSource<=addressEnd;addressSource++)
+	{
+		*addressDest++=*addressSource;
+	}
+
+	popStack( instance, instance_stack - data->stack );
+	return NULL;
 }
 
 char *craftMemCopy KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftMemCopy, tokenBuffer );
 	return tokenBuffer;
 }
 
