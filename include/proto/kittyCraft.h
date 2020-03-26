@@ -38,7 +38,7 @@
   #define CLIB_KITTYCRAFT_PROTOS_H 1
  #endif /* CLIB_KITTYCRAFT_PROTOS_H */
  #ifndef __NOGLOBALIFACE__
-  extern struct kittyCompactIFace *IkittyCraft;
+  extern struct kittyCraftIFace *IkittyCraft;
  #endif /* __NOGLOBALIFACE__ */
 #else /* __amigaos4__ */
  #ifndef CLIB_KITTYCRAFT_PROTOS_H

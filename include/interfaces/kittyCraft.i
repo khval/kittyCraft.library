@@ -9,7 +9,7 @@
 #include <exec/exec.i>
 #include <exec/interfaces.i>
 
-STRUCTURE kittyCompactIFace, InterfaceData_SIZE
+STRUCTURE kittyCraftIFace, InterfaceData_SIZE
 	    FPTR IkittyCraft_Obtain
 	    FPTR IkittyCraft_Release
 	    FPTR IkittyCraft_Expunge
@@ -18,6 +18,6 @@ STRUCTURE kittyCompactIFace, InterfaceData_SIZE
 	    FPTR IkittyCraft_FreeLookupTable
 	    FPTR IkittyCraft_makeContext
 	    FPTR IkittyCraft_FreeContext
-	LABEL kittyCompactIFace_SIZE
+	LABEL kittyCraftIFace_SIZE
 
 #endif

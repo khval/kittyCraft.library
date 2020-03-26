@@ -15,9 +15,9 @@
 #include <libraries/kittycraft.h>
 #endif
 
-extern ULONG                VARARGS68K _kittycraft_Obtain(struct kittyCompactIFace *);
-extern ULONG                VARARGS68K _kittycraft_Release(struct kittyCompactIFace *);
-extern char *               VARARGS68K _kittycraft_makeLookupTable(struct kittyCompactIFace *);
-extern void                 VARARGS68K _kittycraft_FreeLookupTable(struct kittyCompactIFace *, void * table);
-extern void *               VARARGS68K _kittycraft_makeContext(struct kittyCompactIFace *);
-extern void                 VARARGS68K _kittycraft_FreeContext(struct kittyCompactIFace *, void * table);
+extern ULONG                VARARGS68K _kittycraft_Obtain(struct kittyCraftIFace *);
+extern ULONG                VARARGS68K _kittycraft_Release(struct kittyCraftIFace *);
+extern char *               VARARGS68K _kittycraft_makeLookupTable(struct kittyCraftIFace *);
+extern void                 VARARGS68K _kittycraft_FreeLookupTable(struct kittyCraftIFace *, void * table);
+extern void *               VARARGS68K _kittycraft_makeContext(struct kittyCraftIFace *);
+extern void                 VARARGS68K _kittycraft_FreeContext(struct kittyCraftIFace *, void * table);

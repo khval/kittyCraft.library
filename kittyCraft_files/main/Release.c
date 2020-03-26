@@ -49,7 +49,7 @@
 *
 */
 
-ULONG _kittycraft_Release(struct kittyCompactIFace *Self)
+ULONG _kittycraft_Release(struct kittyCraftIFace *Self)
 {
   return --Self -> Data.RefCount;
 }
