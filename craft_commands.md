@@ -96,24 +96,30 @@
     convert memory block to ascii string.
     0-31 and 128-159 converted to char 46
  
-s$=Str Peek$(address,len)
+*s$=Str Peek$(address,len)*
 
     fetch string from address, len is length of the string in memory,
 
-s$=Str Peek$(address,len,term$)
+*s$=Str Peek$(address,len,term$)*
 
     fetch string from address, len is length of the string in memory, term$ is the end of string.
 
-Str Poke [address],s$ 
+*Str Poke [address],s$*
  
     write string into [address]
 
-n=Chip Max Block  
+*n=Chip Max Block*
  
-n=Fast Max Block  
+    Get largest free block of chip ram
+
+*n=Fast Max Block*
+
+    Get largest free block of fast ram
  
-Mem Copy n,n To n 
+*Mem Copy [StartAddress],[EndAddress] To [destAddress]*
  
+    Copy all bytes from StartAddress, including EndAddress to DestAddress.
+
 n=Mem Type(n)
  
 Mem Scramble n To n,s$ 
