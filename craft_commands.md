@@ -77,46 +77,46 @@
 
     show hex dump in bytes
 
-    s$=Hex Dump$(address,len,1)
+    *s$=Hex Dump$(address,len,1)*
 
     show hex dump in shorts    
 
-    s$=Hex Dump$(address,len,2)
+    *s$=Hex Dump$(address,len,2)*
 
     show hex dump in ints32
 
-    s$=Hex Dump$(address,len,4)
+    *s$=Hex Dump$(address,len,4)*
 
     show hex dump in int64
 
-    s$=Hex Dump$(address,len,8)
+    *s$=Hex Dump$(address,len,8)*
 
 **s$=Chr Dump$(n,n)**
 
     convert memory block to ascii string.
     0-31 and 128-159 converted to char 46
  
-*s$=Str Peek$(address,len)*
+**s$=Str Peek$(address,len)**
 
     fetch string from address, len is length of the string in memory,
 
-*s$=Str Peek$(address,len,term$)*
+**s$=Str Peek$(address,len,term$)**
 
     fetch string from address, len is length of the string in memory, term$ is the end of string.
 
-*Str Poke [address],s$*
+**Str Poke [address],s$**
  
     write string into [address]
 
-*n=Chip Max Block*
+**n=Chip Max Block**
  
     Get largest free block of chip ram
 
-*n=Fast Max Block*
+**n=Fast Max Block**
 
     Get largest free block of fast ram
  
-*Mem Copy [StartAddress],[EndAddress] To [destAddress]*
+**Mem Copy [StartAddress],[EndAddress] To [destAddress]**
  
     Copy all bytes from StartAddress, including EndAddress to DestAddress.
 
