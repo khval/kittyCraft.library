@@ -560,10 +560,58 @@ char *craftMemStrCount KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftStrScrambleSTR(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	printf("args: %d\n",args);
+
+	api.dumpStack();
+
+	switch (args)
+	{
+		case 2:
+			{
+				char *txtRaw;
+				char *passRaw;
+				char c;
+				int n;
+				struct stringData *txt = getStackString( instance,__stack-1 );
+				struct stringData *pass = getStackString( instance,__stack );
+
+				txtRaw = &txt->ptr;
+				passRaw = &pass->ptr;
+
+				for (n=0;n<txt->size;n++)
+				{
+					c=passRaw[n % pass -> size];
+					txtRaw[n] ^= ( ((c & 0xF0) >> 4) | ((c & 0x0F)<<4) ) ^ (n & 0xFF);
+				}
+
+				setStackNone( instance );
+				instance_stack--;
+				return NULL;
+			}
+			break;
+
+		default:
+
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+
+	return NULL;
+}
+
 char *craftStrScrambleSTR KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftStrScrambleSTR, tokenBuffer );
 	return tokenBuffer;
 }
 
@@ -574,10 +622,63 @@ char *craftStrUnscrambleSTR KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftHexDumpSTR(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	printf("args: %d\n",args);
+
+	api.dumpStack();
+
+	switch (args)
+	{
+		case 2:
+			{
+				int n;
+				char *dest, *adr = (char *) getStackNum( instance,__stack -1);
+				int len = getStackNum( instance,__stack );
+
+				struct stringData *newStr = alloc_amos_string( (len*2) + (len/4) );
+
+				dest = &newStr -> ptr;
+				for (n=0;n<len;n++)
+				{
+					if ( (n>0) && ( (n%4) == 0) )
+					{
+						sprintf( dest, " %02x", adr[n] );
+						dest +=3;
+					}
+					else 
+					{
+						sprintf( dest, "%02x", adr[n] );
+						dest +=2;
+					}
+				}
+
+				popStack( instance, instance_stack - data->stack );
+				setStackStr( instance, newStr );
+				return NULL;
+			}
+			break;
+
+		default:
+
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+
+	return NULL;
+}
+
 char *craftHexDumpSTR KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftHexDumpSTR, tokenBuffer );
 	return tokenBuffer;
 }
 
