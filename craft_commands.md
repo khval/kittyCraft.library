@@ -56,15 +56,27 @@
 
     Find item$ in memory from [start] to [end].
  
-s$=Str Scramble$(s$,s$)
+**s$=Str Scramble$(s$,s$)**
 
-s$=Str Unscramble$(s$,s$)
+    Makes a text string unreadable.
+    (this command, do not use the original way to scramble the text)
+
+**s$=Str Unscramble$(s$,s$)**
  
-s$=Hex Dump$(n,n,n)
- 
-s$=Hex Dump$(n,n)
- 
-s$=Chr Dump$(n,n)
+    Maes a scrambled text string readable.
+    (this command, do not use the original way to unscramble the text)
+
+**s$=Hex Dump$(address,n)**
+    
+    Dumps the first n bytes as hex, from Address.
+    result stored in S$
+
+**s$=Hex Dump$(n,n,n)**
+
+**s$=Chr Dump$(n,n)**
+
+    convert memory block to ascii string.
+    0-31 and 128-159 converted to char 46
  
 s$=Str Peek$(n,n,s$)
  
