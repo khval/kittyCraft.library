@@ -967,17 +967,69 @@ char *craftMemType KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+
+char *_craftMemScramble(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	printf("args: %d\n",args);
+
+	api.dumpStack();
+
+	switch (args)
+	{
+		case 2:
+			{
+				int bankNr = getStackNum( instance,__stack-1 );
+				struct stringData *pass = getStackString( instance,__stack );
+				struct kittyBank *bank;
+
+				bank = api.findBank( bankNr );
+
+				if (bank)
+				{
+					__scramble__( bank -> start, bank -> start + bank->length - 1, pass );
+				}
+				else api.setError(22, data -> tokenBuffer);
+			}
+			popStack( instance, instance_stack - data->stack );
+			return NULL;
+
+		case 3:
+			{
+				char *txtRaw = (char *) getStackNum( instance,__stack-2 );
+				char *txtRawTo = (char *) getStackNum( instance,__stack-1 );
+				struct stringData *pass = getStackString( instance,__stack );
+
+				__scramble__( txtRaw, txtRawTo, pass );
+			}
+			popStack( instance, instance_stack - data->stack );
+			return NULL;
+
+		default:
+
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+	return NULL;
+}
+
 char *craftMemScramble KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftMemScramble, tokenBuffer );
 	return tokenBuffer;
 }
 
 char *craftMemUnscramble KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftMemScramble, tokenBuffer );
 	return tokenBuffer;
 }
 
