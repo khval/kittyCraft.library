@@ -560,6 +560,21 @@ char *craftMemStrCount KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+void __scramble__( char *txtRaw, char *txtRawTo, struct stringData *pass )
+{
+	char c;
+	int n;
+	char *passRaw = &pass->ptr;
+
+	n=0;
+	for (;txtRaw<=txtRawTo;txtRaw++)
+	{
+		c=passRaw[n % pass -> size];
+		*txtRaw ^= ( ((c & 0xF0) >> 4) | ((c & 0x0F)<<4) ) ^ (n & 0xFF);
+		n++;
+	}
+}
+
 char *_craftStrScrambleSTR(  struct glueCommands *data, int nextToken )
 {
 	struct KittyInstance *instance = data -> instance;
@@ -576,20 +591,11 @@ char *_craftStrScrambleSTR(  struct glueCommands *data, int nextToken )
 		case 2:
 			{
 				char *txtRaw;
-				char *passRaw;
-				char c;
-				int n;
 				struct stringData *txt = getStackString( instance,__stack-1 );
 				struct stringData *pass = getStackString( instance,__stack );
 
 				txtRaw = &txt->ptr;
-				passRaw = &pass->ptr;
-
-				for (n=0;n<txt->size;n++)
-				{
-					c=passRaw[n % pass -> size];
-					txtRaw[n] ^= ( ((c & 0xF0) >> 4) | ((c & 0x0F)<<4) ) ^ (n & 0xFF);
-				}
+				__scramble__( txtRaw, txtRaw + txt->size - 1, pass );
 
 				setStackNone( instance );
 				instance_stack--;
