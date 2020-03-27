@@ -939,10 +939,31 @@ char *craftMemCopy KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftMemType( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	char *adr;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	if (args !=1)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+
+	adr =(char *) getStackNum( instance,__stack );
+	setStackNum( instance, TypeOfMem(adr) );
+
+	return NULL;
+}
+
 char *craftMemType KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftMemType, tokenBuffer );
 	return tokenBuffer;
 }
 
