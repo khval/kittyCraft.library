@@ -125,13 +125,21 @@
     Get memory type, note this command will NOT 
     return the same memory types under AmigaOS4.1 as under AmigaOS3.1
 
-**Mem Scramble [StartAddress] To [EndAddress],s$**
- 
-**Mem Scramble [bank],s$**
+**Mem Scramble [StartAddress] To [EndAddress],password$**
 
-**Mem Unscramble [StartAddress] To [EndAddress],s$**
+    Scamble memory from StartAddress, including EndAddress.
  
-**Mem Unscramble [bank],s$**
+**Mem Scramble [bank],password$**
+
+    Scamble the memory in the bank.
+
+**Mem Unscramble [StartAddress] To [EndAddress],password$**
+ 
+    Unscamble memory from StartAddress, including EndAddress.
+
+**Mem Unscramble [bank],password$**
+
+    Unscamble the memory in the bank.
  
 s$=Dr File$(s$)
  
