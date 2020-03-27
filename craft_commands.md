@@ -120,15 +120,18 @@
  
     Copy all bytes from StartAddress, including EndAddress to DestAddress.
 
-n=Mem Type(n)
+**n=Mem Type(n)**
+
+    Get memory type, note this command will NOT 
+    return the same memory types under AmigaOS4.1 as under AmigaOS3.1
+
+**Mem Scramble [StartAddress] To [EndAddress],s$**
  
-Mem Scramble n To n,s$ 
+**Mem Scramble [bank],s$**
+
+**Mem Unscramble [StartAddress] To [EndAddress],s$**
  
-Mem Scramble n,s$ 
- 
-Mem Unscramble n To n,s$ 
- 
-Mem Unscramble n,s$ 
+**Mem Unscramble [bank],s$**
  
 s$=Dr File$(s$)
  
