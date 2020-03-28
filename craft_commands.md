@@ -143,7 +143,11 @@
  
 s$=Dr File$(s$)
  
-s$=Dr Path$(s$)
+**s$=Dr Path$(path_and_name$)**
+
+    Get path from string.
+    if the file do not exists, 
+    returns error 81 if does not exist.
  
 n=Db Free(s$)
  
@@ -167,8 +171,15 @@ Set Protect s$,n
  
 Set Comment s$,s$ 
  
-s$=Dr Name$(s$)
+**s$=Dr Name$(s$)**
  
+    Get filename from string.
+    if the file do not exists, 
+    returns error 81 if does not exist.
+
+    (This command can mistake a path for file in the original AmosPro_Craft.lib)
+    I believe this command is also undocumented
+
 s$=Dr Next$  
  
 s$=Dr Comment$  
