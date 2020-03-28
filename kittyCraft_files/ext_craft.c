@@ -1033,17 +1033,81 @@ char *craftMemUnscramble KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+
 char *craftDrFileSTR KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	api.setError( 22, tokenBuffer );
 	return tokenBuffer;
+}
+
+char *_craftDrPathSTR( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	if (args !=1)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+	else
+	{
+		int n;
+		register char c;
+		int r = -1;
+		struct stringData *pathWithName = getStackString( instance,__stack );
+		
+		if (pathWithName)	// if its a string.
+		{
+
+			BPTR lock;
+			APTR oldRequest;
+			char *ptr = &pathWithName->ptr;
+
+			oldRequest = SetProcWindow((APTR)-1);
+			lock = Lock( ptr, SHARED_LOCK );
+			SetProcWindow(oldRequest);
+
+			if (lock == NULL)	// If file / path do not exist should return error.
+			{
+				api.setError(81, data -> tokenBuffer);
+				return NULL;
+			}
+
+			UnLock( lock );
+
+			for (n=pathWithName -> size -1; n>=0;n--)
+			{
+				c = ptr[n];
+				if ((c=='/') || (c==':')) 
+				{
+					r=n; 	break;
+				}
+			}
+
+			if (r!=-1) // found path
+			{
+				ptr[r+1] = 0;
+				instance->kittyStack[instance_stack].str -> size = r+1;	// truncate stack string.
+			}
+			else	// no path found.
+			{
+				instance->kittyStack[instance_stack].str -> size = 0;	// truncate stack string.
+			}
+		}
+		else api.setError( 22, data -> tokenBuffer );
+	}
+	return NULL;
 }
 
 char *craftDrPathSTR KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftDrPathSTR, tokenBuffer );
 	return tokenBuffer;
 }
 
@@ -1123,10 +1187,81 @@ char *craftSetComment KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftDrNameSTR( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	api.dumpStack();
+
+	if (args !=1)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+	else
+	{
+		int n;
+		register char c;
+		int r = -1;
+		struct stringData *pathWithName = getStackString( instance,__stack );
+		
+		if (pathWithName)	// if its a string.
+		{
+			BPTR lock;
+			APTR oldRequest;
+			char *ptr = &pathWithName->ptr;
+
+			oldRequest = SetProcWindow((APTR)-1);
+			lock = Lock( ptr, SHARED_LOCK );
+			SetProcWindow(oldRequest);
+
+			if (lock == NULL)	// If file / path do not exist should return error.
+			{
+				api.setError(81, data -> tokenBuffer);
+				return NULL;
+			}
+
+			UnLock( lock );
+
+			for (n=pathWithName -> size -1; n>=0;n--)
+			{
+				c = ptr[n];
+				if ((c=='/') || (c==':')) break;
+				r = n;
+			}
+
+			if (r!=-1) // found name
+			{
+				int s = r;
+
+				// move to front, saves me allocating new mem.
+				n = 0;
+				for (;ptr[s];s++,n++)
+				{
+					ptr[n]=ptr[s];
+				}
+				ptr[n]=0;
+				instance->kittyStack[instance_stack].str -> size = n;	// truncate stack.
+			}
+			else	// no name found.
+			{
+				instance->kittyStack[instance_stack].str -> size = 0;	// truncate stack.
+			}
+		}
+		else api.setError( 22, data -> tokenBuffer );
+	}
+
+	return NULL;
+}
+
 char *craftDrNameSTR KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftDrNameSTR, tokenBuffer );
 	return tokenBuffer;
 }
 
