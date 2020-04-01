@@ -159,13 +159,23 @@ n=Disc State(s$)
  
 s$=Disc Type$(s$)
  
-n=File Protect(s$)
+**n=File Protect(s$)**
+
+	return the protection bits.
  
-s$=File Comment$(s$)
+**s$=File Comment$(s$)**
+
+	Should return file comment
  
-n=File Length(s$)
+**n=File Length(s$)**
+
+	Should return file length, might not work correct..
  
-n=File Type(s$)
+**n=File Type(s$)**
+
+	Return type of file..
+	
+	(there might be more work to, not sure if returns the correct types)
  
 Set Protect s$,n 
  
