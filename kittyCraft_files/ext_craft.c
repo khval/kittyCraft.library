@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <math.h>
+#include <limits.h>
 
 #ifdef __amigaos4__
 #include <proto/exec.h>
@@ -1320,14 +1321,10 @@ char *craftDrNameSTR KITTENS_CMD_ARGS
 
 char *craftDrNextSTR KITTENS_CMD_ARGS
 {
-	struct stringData *outStr = NULL;
 	struct context *context = instance -> extensions_context[ instance -> current_extension ];
-	char *tmp;
 	unsigned int current_dir_context;
 
 printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-
-printf("context %08x\n", context );
 
 	if (( ! context ) || (context -> used_dir_contexts == 0))
 	{
@@ -1337,8 +1334,6 @@ printf("context %08x\n", context );
 
 	current_dir_context = context -> used_dir_contexts - 1;
 
-printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-
 	printf("current_dir_context %08x\n",context -> dir_context[ current_dir_context ]);
 	printf("examineData %08x" , context -> examineData[ current_dir_context ]);
 
@@ -1347,8 +1342,6 @@ printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 		api.setError(22, tokenBuffer);
 		return tokenBuffer;
 	}
-
-printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if ((context -> examineData[ current_dir_context ] = ExamineDir( context -> dir_context[ current_dir_context ] ))) 
 	{
@@ -1367,33 +1360,83 @@ printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 char *craftDrCommentSTR KITTENS_CMD_ARGS
 {
-	struct stringData str;
+	struct context	*context = (struct context *) instance -> extensions_context[ instance -> current_extension ];
+	STRPTR	Comment;
+
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	str.size = 0;
-	setStackStrDup( instance, &str);
+
+	if (context -> used_dir_contexts==0)
+	{
+		api.setError(22, tokenBuffer);
+		return tokenBuffer;
+	}
+
+	Comment = context -> examineData[ context -> used_dir_contexts - 1 ] -> Comment;
+	setStackStr( instance, toAmosString( Comment, strlen(Comment) ) );
 	return tokenBuffer;
 }
 
 char *craftDrProtect KITTENS_CMD_ARGS
 {
+	struct context	*context = (struct context *) instance -> extensions_context[ instance -> current_extension ];
+	uint32		Protection;
+
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	setStackNum( instance, 0);
+
+	if (context -> used_dir_contexts==0)
+	{
+		api.setError(22, tokenBuffer);
+		return tokenBuffer;
+	}
+
+	Protection = context -> examineData[ context -> used_dir_contexts - 1 ] -> Protection;
+	setStackNum( instance, Protection);
 	return tokenBuffer;
 }
 
 char *craftDrLength KITTENS_CMD_ARGS
 {
+	struct context *context = (struct context *) instance -> extensions_context[ instance -> current_extension ];
+	int64            FileSize;
+
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	setStackNum( instance, 0);
+
+	if (context -> used_dir_contexts==0)
+	{
+		api.setError(22, tokenBuffer);
+		return tokenBuffer;
+	}
+
+	FileSize = context -> examineData[ context -> used_dir_contexts - 1 ] -> FileSize;
+
+	if (FileSize>INT_MAX)
+	{
+		setStackDecimal( instance, (double) FileSize );
+	}
+	else
+	{
+		setStackNum( instance, (int) FileSize);
+		printf("fileSize %lld\n",FileSize);
+	}
+
 	return tokenBuffer;
 }
 
 char *craftDrType KITTENS_CMD_ARGS
 {
+	struct context *context = (struct context *) instance -> extensions_context[ instance -> current_extension ];
+	uint32	Type;
+
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
-	setStackNum( instance, 0);
+	if (context -> used_dir_contexts==0)
+	{
+		api.setError(22, tokenBuffer);
+		return tokenBuffer;
+	}
 
+	Type = context -> examineData[ context -> used_dir_contexts - 1 ] -> Type;
+	setStackNum( instance, Type);
 	return tokenBuffer;
 }
 
@@ -1406,8 +1449,18 @@ char *craftDrFib KITTENS_CMD_ARGS
 
 char *craftDrForget KITTENS_CMD_ARGS
 {
+	struct context *context = instance -> extensions_context[ instance -> current_extension ];
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+
+	if (context -> used_dir_contexts)
+	{
+		int current_dir_context = context -> used_dir_contexts - 1;
+
+		ReleaseDirContext(context -> dir_context[ current_dir_context ]);
+		context -> dir_context[ current_dir_context ] = NULL;
+		context -> used_dir_contexts --;
+	}
+
 	return tokenBuffer;
 }
 
