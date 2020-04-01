@@ -1187,10 +1187,38 @@ char *craftSetComment KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+
+void start_dir_context(struct context *context, char *path)
+{
+printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+printf("context %08x\n", context );
+
+	printf("context -> used_dir_contexts %d\n",context -> used_dir_contexts);
+	printf("path: %s\n",path);
+
+	context -> dir_context[ context -> used_dir_contexts ] =  ObtainDirContextTags(
+			EX_StringNameInput, path,
+			EX_DoCurrentDir,TRUE, 
+			EX_DataFields,(EXF_NAME|EXF_LINK|EXF_TYPE), 
+			TAG_END);
+
+	// if success we count up
+
+	printf("%08x - at %d\n", context -> examineData[ context -> used_dir_contexts ], context -> used_dir_contexts );
+
+	if (context -> dir_context[ context -> used_dir_contexts ]) context -> used_dir_contexts ++; 
+
+	printf("%08x - at %d\n", context -> examineData[ context -> used_dir_contexts ], context -> used_dir_contexts );
+}
+
 char *_craftDrNameSTR( struct glueCommands *data, int nextToken )
 {
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
+	struct context *context = instance -> extensions_context[ instance -> current_extension ];
+
+	printf("instance -> current_extension: %d\n",instance -> current_extension);
 
 	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
@@ -1207,27 +1235,46 @@ char *_craftDrNameSTR( struct glueCommands *data, int nextToken )
 		int n;
 		register char c;
 		int r = -1;
-		struct stringData *pathWithName = getStackString( instance,__stack );
+		struct stringData *path = getStackString( instance,__stack );
 		
-		if (pathWithName)	// if its a string.
+		if (path)	// if its a string.
 		{
 			BPTR lock;
 			APTR oldRequest;
-			char *ptr = &pathWithName->ptr;
+			char *ptr = &path->ptr;
 
 			oldRequest = SetProcWindow((APTR)-1);
 			lock = Lock( ptr, SHARED_LOCK );
 			SetProcWindow(oldRequest);
 
-			if (lock == NULL)	// If file / path do not exist should return error.
+printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+			if ( ! lock )	// If file / path do not exist should return error.
 			{
 				api.setError(81, data -> tokenBuffer);
 				return NULL;
 			}
-
 			UnLock( lock );
 
-			for (n=pathWithName -> size -1; n>=0;n--)
+			start_dir_context(context, &path -> ptr);
+
+			if (path -> size -1>0)
+			{
+			 	char c = ptr[path -> size -1];
+
+				if (c==':')	
+				{
+					return NULL;
+				}
+
+				if (c=='/') 
+				{
+					ptr[path -> size -1] = 0;
+					path -> size--;
+				}
+			}
+
+			for (n=path -> size -1; n>=0;n--)
 			{
 				c = ptr[n];
 				if ((c=='/') || (c==':')) break;
@@ -1252,8 +1299,14 @@ char *_craftDrNameSTR( struct glueCommands *data, int nextToken )
 				instance->kittyStack[instance_stack].str -> size = 0;	// truncate stack.
 			}
 		}
-		else api.setError( 22, data -> tokenBuffer );
+		else 
+		{
+			printf("we ended up here some how\n");
+			api.setError( 22, data -> tokenBuffer );
+		}
 	}
+
+	api.dumpStack();
 
 	return NULL;
 }
@@ -1267,36 +1320,80 @@ char *craftDrNameSTR KITTENS_CMD_ARGS
 
 char *craftDrNextSTR KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	struct stringData *outStr = NULL;
+	struct context *context = instance -> extensions_context[ instance -> current_extension ];
+	char *tmp;
+	unsigned int current_dir_context;
+
+printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+printf("context %08x\n", context );
+
+	if (( ! context ) || (context -> used_dir_contexts == 0))
+	{
+		api.setError(22, tokenBuffer);
+		return tokenBuffer;
+	}
+
+	current_dir_context = context -> used_dir_contexts - 1;
+
+printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	printf("current_dir_context %08x\n",context -> dir_context[ current_dir_context ]);
+	printf("examineData %08x" , context -> examineData[ current_dir_context ]);
+
+	if ( ! context -> dir_context[ current_dir_context ] )  
+	{
+		api.setError(22, tokenBuffer);
+		return tokenBuffer;
+	}
+
+printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	if ((context -> examineData[ current_dir_context ] = ExamineDir( context -> dir_context[ current_dir_context ] ))) 
+	{
+		setStackStr( instance, toAmosString_char( context -> examineData[ current_dir_context ]->Name, 0 ));
+	}
+	else	// no data;
+	{
+		ReleaseDirContext(context -> dir_context[ current_dir_context ]);
+		context -> dir_context[ current_dir_context ] = NULL;
+		context -> used_dir_contexts --;
+		setStackStr( instance, toAmosString("",0));
+	}
+	
 	return tokenBuffer;
 }
 
 char *craftDrCommentSTR KITTENS_CMD_ARGS
 {
+	struct stringData str;
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	str.size = 0;
+	setStackStrDup( instance, &str);
 	return tokenBuffer;
 }
 
 char *craftDrProtect KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	setStackNum( instance, 0);
 	return tokenBuffer;
 }
 
 char *craftDrLength KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	setStackNum( instance, 0);
 	return tokenBuffer;
 }
 
 char *craftDrType KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+
+	setStackNum( instance, 0);
+
 	return tokenBuffer;
 }
 
@@ -1980,7 +2077,6 @@ char *craftL_swap KITTENS_CMD_ARGS
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
-
 
 char *craftW_swap KITTENS_CMD_ARGS
 {
