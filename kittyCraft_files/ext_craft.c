@@ -1072,7 +1072,7 @@ char *_craftDrPathSTR( struct glueCommands *data, int nextToken )
 			lock = Lock( ptr, SHARED_LOCK );
 			SetProcWindow(oldRequest);
 
-			if (lock == NULL)	// If file / path do not exist should return error.
+			if ( ! lock )	// If file / path do not exist should return error.
 			{
 				api.setError(81, data -> tokenBuffer);
 				return NULL;
