@@ -13,14 +13,18 @@
  *
  */
 
+#include <stdlib.h>
+#include <stdio.h>
 
 #include <exec/exec.h>
 #include <proto/exec.h>
+#include <proto/dos.h>
 #include <dos/dos.h>
 #include <exec/types.h>
 #include <libraries/kittycraft.h>
 #include <proto/kittyCraft.h>
 #include <stdarg.h>
+#include "context.h"
 
 /****** kittyCraft/main/FreeContext ******************************************
 *
@@ -50,8 +54,27 @@
 *
 */
 
-void _kittycraft_FreeContext(struct kittyCompactIFace *Self,
-       void * table)
+void _kittycraft_FreeContext(struct kittyCraftIFace *Self,  struct context * context)
 {
+	int n;
+
+	printf("Free context %08x\n", (unsigned int) context);
+
+	if (context)
+	{
+		printf("context -> used_dir_contexts: %d\n", (unsigned int) context -> used_dir_contexts);
+
+		for ( n=0; n < context -> used_dir_contexts; n++ )
+		{
+			printf("check dir_context[%d]\n", n);
+			if (context -> dir_context[n])
+			{
+				printf("free dir_context[%d]\n",n);
+				ReleaseDirContext(context -> dir_context[n]);
+				context -> dir_context[n] = NULL;
+			}
+		}
+		free (context);
+	}
 }
 

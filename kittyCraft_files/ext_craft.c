@@ -27,6 +27,8 @@
 #include <kittyErrors.h>
 #include "cmdList.h"
 
+#include "context.h"
+
 #define kittyError instance->kittyError
 #define api instance -> api
 #define last_var instance -> last_var
@@ -356,9 +358,7 @@ char *_craftBwInstr(  struct glueCommands *data, int nextToken )
 			size = size < txt->size ? size : txt->size;
 			break;
 
-
 		default:
-
 			popStack( instance, instance_stack - data->stack );
 			api.setError(22, data -> tokenBuffer);
 			return NULL;

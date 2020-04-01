@@ -13,14 +13,19 @@
  *
  */
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 #include <exec/exec.h>
 #include <proto/exec.h>
 #include <dos/dos.h>
+#include <proto/dos.h>
 #include <exec/types.h>
 #include <libraries/kittycraft.h>
 #include <proto/kittyCraft.h>
 #include <stdarg.h>
+#include "context.h"
 
 /****** kittyCraft/main/makeContext ******************************************
 *
@@ -49,8 +54,19 @@
 *
 */
 
-void * _kittycraft_makeContext(struct kittyCompactIFace *Self)
+
+
+void * _kittycraft_makeContext(struct kittyCraftIFace *Self)
 {
-  return NULL;
+	struct context *context;
+
+	context =  malloc(sizeof(struct context));
+	if (context)
+	{
+		bzero( context, sizeof(struct context) );
+		printf("context -> used_dir_contexts: %d\n", (unsigned int) context -> used_dir_contexts);
+	}
+
+	return context;
 }
 
