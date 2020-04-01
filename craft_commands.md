@@ -159,50 +159,69 @@ n=Disc State(s$)
  
 s$=Disc Type$(s$)
  
-**n=File Protect(s$)**
+n=File Protect(s$)
 
-	return the protection bits.
- 
-**s$=File Comment$(s$)**
+s$=File Comment$(s$)
 
-	Should return file comment
+n=File Length(s$)
  
-**n=File Length(s$)**
+n=File Type(s$)
 
-	Should return file length, might not work correct..
- 
-**n=File Type(s$)**
-
-	Return type of file..
-	
-	(there might be more work to, not sure if returns the correct types)
- 
 Set Protect s$,n 
  
 Set Comment s$,s$ 
  
 **s$=Dr Name$(s$)**
  
-    Get filename from string.
-    if the file do not exists, 
-    returns error 81 if does not exist.
+    Set the current directory
+	for command "Dr Next$".
+	plase make sure read all files in the direcory 
+	or use "Dr Forget" command, to undo 
+	what this command has done.
+	
+    if the directory does not exists, 
+	then this command will returns error 81.
 
-    (This command can mistake a path for file in the original AmosPro_Craft.lib)
-    I believe this command is also undocumented
+	(this command can be used recursively, 
+	every time you call this command, 
+	it will stack up etch directory context.)
+	
+**s$=Dr Next$**
 
-s$=Dr Next$  
+	Get the next file or dirctory.
+	when your at the end of list you 
+	get a empty string as return value.
+
+	if you abort before reading all files, 
+	you need to use "dr forget" command.
+	If you do not use "dr forget", 
+	you risk overflowing internal buffers.
  
-s$=Dr Comment$  
+**s$=Dr Comment$**
+
+	This command should return file comment.
  
-n=Dr Protect  
+**n=Dr Protect**
+
+	Return protection bits, 
+	This command can only be used after a successful Dr Next$ command.
  
-n=Dr Length  
- 
-n=Dr Type  
+**n=Dr Length**
+
+	Should return file length, 
+	This command can only be used after a successful Dr Next$ command.
+
+**n=Dr Type**
+
+	Should return filesystem object type. (not sure if uses correct numbers)
+ 	This command can only be used after a successful Dr Next$ command.
  
 n=Dr Fib  
  
-Dr Forget  
+**Dr Forget**
+
+	This is used to forget about "Dr Name$" command,
+	needs to be called, if you abort reading all files.
  
 n=Disc Error  
  
