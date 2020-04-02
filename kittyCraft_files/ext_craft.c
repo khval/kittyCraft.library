@@ -1112,24 +1112,152 @@ char *craftDrPathSTR KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+enum
+{
+	e_freeDiskSize = 1,
+	e_usedDiskSize,
+	e_diskSize
+};
+
+uint64 getDiskBlockSize( int opt, struct stringData *volumeName)
+{
+	int result = -1;
+	struct InfoData info;
+	APTR oldRequest = SetProcWindow(NULL);
+
+	result = GetDiskInfoTags( 
+		GDI_StringNameInput, &volumeName -> ptr,
+		GDI_InfoData, &info, TAG_END );
+
+	SetProcWindow(oldRequest);
+
+	if (result)
+	{
+		switch (opt)
+		{
+			case e_diskSize:
+				return (uint64_t) info.id_NumBlocks;
+
+			case e_freeDiskSize:
+				return (uint64_t) info.id_NumBlocks - (uint64_t) info.id_NumBlocksUsed;
+
+			case e_usedDiskSize:
+				return (uint64_t) info.id_NumBlocksUsed;
+		}
+	}
+	return 0;
+}
+
+char *_craftDbFree(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	uint64 ret;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	api.dumpStack();
+
+	printf("args: %d\n",args);
+
+	if (args !=1)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+
+	ret = getDiskBlockSize(  e_freeDiskSize, getStackString( instance,__stack ) );
+
+	if (ret<0x80000000)
+	{
+		setStackNum( instance, (int) ret ); 
+	}
+	else
+	{
+		setStackDecimal( instance, (double) ret );
+	}
+	return NULL;
+}
+
 char *craftDbFree KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftDbFree, tokenBuffer );
 	return tokenBuffer;
+}
+
+char *_craftDbUsed(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	uint64 ret;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	printf("args: %d\n",args);
+
+	if (args !=1)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+
+	ret = getDiskBlockSize( e_usedDiskSize, getStackString( instance,__stack ) );
+
+	if (ret<0x80000000)
+	{
+		setStackNum( instance, (int) ret ); 
+	}
+	else
+	{
+		setStackDecimal( instance, (double) ret );
+	}
+	return NULL;
 }
 
 char *craftDbUsed KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftDbUsed, tokenBuffer );
 	return tokenBuffer;
+}
+
+char *_craftDbSize(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	uint64 ret;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	printf("args: %d\n",args);
+
+	if (args !=1)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+
+	ret = getDiskBlockSize(  e_diskSize, getStackString( instance,__stack ) );
+
+	if (ret<0x80000000)
+	{
+		setStackNum( instance, (int) ret ); 
+	}
+	else
+	{
+		setStackDecimal( instance, (double) ret );
+	}
+	return NULL;
 }
 
 char *craftDbSize KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftDbSize, tokenBuffer );
 	return tokenBuffer;
 }
 
