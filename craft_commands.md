@@ -149,16 +149,36 @@ s$=Dr File$(s$)
     if the file do not exists, 
     returns error 81 if does not exist.
  
-n=Db Free(s$)
+**n=Db Free(s$)**
+
+    returns number of blocks free on drive s$
  
-n=Db Used(s$)
+**n=Db Used(s$)**
+
+    returns number of blocks used on drive s$
  
-n=Db Size(s$)
+**n=Db Size(s$)**
+
+    returns returns the size in blocks of drive s$
  
 n=Disc State(s$)
+
+    return sate of drive
+    -1 is not a DOS disk
+    0 is write protected
+    1 is not validated
+    2 is filesystem ok, ready to use.
  
 s$=Disc Type$(s$)
  
+    Returns the identification code of the disk in drive
+
+    DOS is OFS
+    DOS+chr$(1) is FFS
+    NDOS Not an AmigaDOS disc
+    BAD Disc structure is corrupted or abnormal
+    KICK a kickstart disc for Amiga 1000.
+
 n=File Protect(s$)
 
 s$=File Comment$(s$)
