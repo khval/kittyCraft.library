@@ -1261,17 +1261,110 @@ char *craftDbSize KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftDiscState(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	struct stringData  *name;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	printf("args: %d\n",args);
+
+	if (args !=1)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+
+	name = getStackString( instance,__stack );
+
+	if (name)
+	{
+		int32 result = 0;
+		struct InfoData *info = AllocDosObject(DOS_INFODATA,0);
+
+		if (info) result = GetDiskInfoTags(
+				GDI_StringNameInput, &name -> ptr,
+				GDI_InfoData, info,
+				TAG_END);
+
+		if (result)	{
+			setStackNum(instance, info -> id_DiskState );
+		}
+		else	{
+			setStackNum(instance, -1 );
+		}
+
+		if (info) FreeDosObject(DOS_INFODATA, info);
+	}
+
+	return NULL;
+}
+
 char *craftDiscState KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftDiscState, tokenBuffer );
 	return tokenBuffer;
+}
+
+char *_craftDiscTypeSTR(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	struct stringData  *name,*ret;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	printf("args: %d\n",args);
+
+	if (args !=1)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+
+	name = getStackString( instance,__stack );
+	ret = alloc_amos_string( 4 );
+
+	if (name)
+	{
+		int32 result = 0;
+		struct InfoData *info = AllocDosObject(DOS_INFODATA,0);
+
+		if (info) result = GetDiskInfoTags(
+				GDI_StringNameInput, &name -> ptr,
+				GDI_InfoData, info,
+				TAG_END);
+
+		if (result)	{
+			*((uint32 *) &ret -> ptr) = info -> id_DiskType;
+			setStackStr(instance, ret );
+		}
+		else	{
+			*((uint32 *) &ret -> ptr) = -1;
+			setStackStr(instance, ret );
+		}
+
+		if (info) FreeDosObject(DOS_INFODATA, info);
+	}
+	else
+	{
+		if (ret) sys_free( ret);
+		ret = NULL;
+		api.setError( 22, data -> tokenBuffer );
+	}
+
+	return NULL;
 }
 
 char *craftDiscTypeSTR KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftDiscTypeSTR, tokenBuffer );
 	return tokenBuffer;
 }
 
