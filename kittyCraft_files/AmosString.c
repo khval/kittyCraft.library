@@ -142,8 +142,7 @@ struct stringData *toAmosString( const char *txt,int len)
 	char *ptr;
 	int _l = 0;
 	
-	ptr = txt; while (*ptr) _l++;
-
+	ptr = txt; while ((*ptr)&&(_l<len)) _l++;
 	if (_l<len) len = _l;
 
 	allocNewString(len,newstr);
@@ -151,6 +150,7 @@ struct stringData *toAmosString( const char *txt,int len)
 	{
 		newstr -> size = len;
 		(&newstr -> ptr)[len]=0;	// unlike AmosPro, Amos kitten strings should be 0 terminaled, so they will work with standard OS libraryes and C libs.
+
 		memcpy(&(newstr -> ptr),txt,len);
 	}
 	return newstr;
