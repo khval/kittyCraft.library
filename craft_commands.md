@@ -490,15 +490,14 @@ n=Amos Base
 
 **n=W.swap(n)**
 
-    Swaps high and low byte in a word / int16, 
+    Swaps high and low byte in a word / (int16), 
     if number is larger then a word then upper bits are masked out.
 
     $FFFF0201 becomes $0102
  
 **n=L.swap(n)**
 
-    Swaps high and low word in a long / int32, 
-    if number is larger then a word then upper bits are masked out.
+    Swaps high and low word in a long / (int32), 
 
     $04030201 becomes $02010403
 
