@@ -179,19 +179,31 @@ s$=Disc Type$(s$)
     BAD Disc structure is corrupted or abnormal
     KICK a kickstart disc for Amiga 1000.
 
-n=File Protect(s$)
+**n=File Protect(filename$)**
 
-s$=File Comment$(s$)
+    Returns protection bits from filename$
 
-n=File Length(s$)
- 
-n=File Type(s$)
+**s$=File Comment$(s$)**
 
-Set Protect s$,n 
+    Returns comment of file from filename$
+
+**n=File Length(s$)**
+
+    Returns length of file from filename$
  
-Set Comment s$,s$ 
+**n=File Type(filename$)**
+
+    Returns type of file from filename$
+
+**Set Protect filename$,n**
+
+    Command sets file protection bits
  
-**s$=Dr Name$(s$)**
+**Set Comment filename$,comment$)**
+
+    Command sets file comment
+
+**s$=Dr Name$(path$)**
  
     Set the current directory
 	for command "Dr Next$".
