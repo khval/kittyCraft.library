@@ -467,12 +467,18 @@ n=Y Beam
  
 Beam Wait n 
  
-n=Gr Ink  
+**n=Gr Ink**
+
+    Returns ink1
  
-n=Gr Back  
+**n=Gr Back**
  
-n=Gr Border  
+    Returns ink2
+
+**n=Gr Border**
  
+    Returns ink3
+
 Gr Centre n,s$ 
  
 n=Amos Base  
