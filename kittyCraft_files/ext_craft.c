@@ -2477,12 +2477,6 @@ char *craftCraftVersion KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
-char *craftB_swap KITTENS_CMD_ARGS
-{
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
-	return tokenBuffer;
-}
 
 char *craftCliHere KITTENS_CMD_ARGS
 {
@@ -2505,19 +2499,94 @@ char *craftSetWbPrefs KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
-char *craftL_swap KITTENS_CMD_ARGS
+char *_craftB_swap( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	uint32 ret;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	if (args !=1)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+
+	ret = (uint32) getStackNum( instance,__stack );
+	setStackNum( instance, 
+		((ret & 0x0F) << 4) | 
+		((ret & 0xF0) >> 4)  );
+
+	return NULL;
+}
+
+char *craftB_swap KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftB_swap, tokenBuffer );
 	return tokenBuffer;
+}
+
+char *_craftW_swap( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	uint32 ret;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	if (args !=1)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+
+	ret = (uint32) getStackNum( instance,__stack );
+	setStackNum( instance, 
+		((ret & 0x00FF) << 8) | 
+		((ret & 0xFF00) >> 8)  );
+
+	return NULL;
 }
 
 char *craftW_swap KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftW_swap, tokenBuffer );
 	return tokenBuffer;
 }
+
+
+char *_craftL_swap( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	uint32 ret;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	if (args !=1)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+
+	ret = (uint32) getStackNum( instance,__stack );
+	setStackNum( instance, ((ret & 0x0000FFFF) << 16) | ((ret & 0xFFFF0000 ) >> 16) );
+	return NULL;
+}
+
+char *craftL_swap KITTENS_CMD_ARGS
+{
+	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	stackCmdParm( _craftL_swap, tokenBuffer );
+	return tokenBuffer;
+}
+
 
 
 
