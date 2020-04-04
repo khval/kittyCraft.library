@@ -1591,11 +1591,7 @@ printf("context %08x\n", context );
 
 	// if success we count up
 
-	printf("%08x - at %d\n", context -> examineData[ context -> used_dir_contexts ], context -> used_dir_contexts );
-
 	if (context -> dir_context[ context -> used_dir_contexts ]) context -> used_dir_contexts ++; 
-
-	printf("%08x - at %d\n", context -> examineData[ context -> used_dir_contexts ], context -> used_dir_contexts );
 }
 
 char *_craftDrNameSTR( struct glueCommands *data, int nextToken )
