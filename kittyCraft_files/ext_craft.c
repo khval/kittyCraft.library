@@ -2436,21 +2436,45 @@ char *craftBeamWait KITTENS_CMD_ARGS
 char *craftGrInk KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+
+	struct retroScreen *screen = instance -> screens[ instance -> current_screen ];
+
+	if (screen)
+	{
+		setStackNum( instance, screen -> ink0 );
+	}
+	else api.setError(22, tokenBuffer);
+
 	return tokenBuffer;
 }
 
 char *craftGrBack KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+
+	struct retroScreen *screen = instance -> screens[ instance -> current_screen ];
+
+	if (screen)
+	{
+		setStackNum( instance, screen -> ink1 );
+	}
+	else api.setError(22, tokenBuffer);
+
 	return tokenBuffer;
 }
 
 char *craftGrBorder KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+
+	struct retroScreen *screen = instance -> screens[ instance -> current_screen ];
+
+	if (screen)
+	{
+		setStackNum( instance, screen -> ink2 );
+	}
+	else api.setError(22, tokenBuffer);
+
 	return tokenBuffer;
 }
 
