@@ -477,14 +477,31 @@ Gr Centre n,s$
  
 n=Amos Base  
  
-n=Craft Version  
+**n=Craft Version**
+
+    Returns verson of the kittycraft extention / library version.
  
-n=B.swap(n)
+**n=B.swap(n)**
+
+    Swaps high and low nibble in a byte, 
+    if number is larger then a byte then upper bits are masked out.
+
+    $FFFFFF21 becomes $12
+
+**n=W.swap(n)**
+
+    Swaps high and low byte in a word / int16, 
+    if number is larger then a word then upper bits are masked out.
+
+    $FFFF0201 becomes $0102
  
-n=W.swap(n)
- 
-n=L.swap(n)
- 
+**n=L.swap(n)**
+
+    Swaps high and low word in a long / int32, 
+    if number is larger then a word then upper bits are masked out.
+
+    $04030201 becomes $02010403
+
 n=Cli Here  
  
 n=Amos Pro  
