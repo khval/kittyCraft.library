@@ -305,7 +305,9 @@ n=Disc Error
     Old “AmosPro Craft extension” only reserves 32 colors in ECS format (2 bytes per color).
     “KittyCraft” reserves 256 colors in AGA/VGA format (3 bytes per color).
 
-n=Pal Count(n)
+**n=Pal Count(n)**
+
+    Return number of palettes reserved in bank
  
 **Pal To Bank [bank number]**
 
@@ -317,7 +319,7 @@ n=Pal Count(n)
 
 Pal To Bank [bank number],[palette number],[mask]
  
- --- don't know how mask works... (not working yet.)
+ --- don't know how mask works... (so not working yet.)
  
 **Pal From Bank [bank number]**
 
@@ -329,25 +331,50 @@ Pal To Bank [bank number],[palette number],[mask]
 
 Pal From Bank [bank number],[palette number],[mask]
 
---- don't know how mask works... (not working yet.)
+--- don't know how mask works... (so not working yet.)
 
-Pal Swap Bank n 
+Pal Spread [color index 1] To [color index 2]
 
-Pal Spread n To n 
+    Mix colors between color index 1 to color index 2
 
-Pal Copy n To n 
+Pal Copy [color1] To [color2]
 
-Pal Swap n,n 
+    Copy RGB value from color1 to color2
+
+Pal Swap [color1],[color2] 
+
+    Swap two colors
+
+Pal Swap Bank [bank]
+
+    Swaps the current palette with the bank 
  
-Pal Swap Bank n,n
+Pal Swap Bank [bank],[color]
 
-Pal Swap Bank n,n,n
+    Swaps the current palette with the bank, starting with [color].
 
-Set Bank Colour n,n,n,n 
+Pal Swap Bank [bank],[color],[mask]
+
+    Swaps the current palette with the bank, starting with [color].
+    mask limits the colors transfared to the bank.
+
+Set Bank Colour [bank number],[palette],[color number],[value]
+
+    Changes the [color number] in [palette] in the [bank number] with [value]
+
+    There are two options for values.
+
+    [value] is in the range $000 to $FFF for OCS/ECS
+    [value] is in the range $FF000000 to $FFFFFFFF for 24bit RGB (VGA/AGA)
  
-n=Bank Colour(n,n,n)
+n=Bank Colour([bank number],[palette],[color index])
+
+    Returns the color in [color index] of [palette] stored in [bank number].
  
-Del Bank Colour n,n,n 
+Del Bank Colour [bank number],[palette],[color index]
+
+    deletes color from bank, 
+    don't know how...
  
 Tr Exec s$,n 
  
