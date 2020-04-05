@@ -302,6 +302,9 @@ n=Disc Error
  
     Reserve a bank with x number of palettes
 
+    Old “AmosPro Craft extension” only reserves 32 colors in ECS format (2 bytes per color).
+    “KittyCraft” reserves 256 colors in AGA/VGA format (3 bytes per color).
+
 n=Pal Count(n)
  
 **Pal To Bank [bank number]**
@@ -314,7 +317,7 @@ n=Pal Count(n)
 
 Pal To Bank [bank number],[palette number],[mask]
  
- --- don't know what mask works... (not working yet.)
+ --- don't know how mask works... (not working yet.)
  
 **Pal From Bank [bank number]**
 
@@ -326,7 +329,7 @@ Pal To Bank [bank number],[palette number],[mask]
 
 Pal From Bank [bank number],[palette number],[mask]
 
---- don't know what mask works... (not working yet.)
+--- don't know how mask works... (not working yet.)
 
 Pal Swap Bank n 
 
