@@ -257,46 +257,89 @@ n=Dr Fib
  
 n=Disc Error  
  
-Set Red n,n 
- 
-n=Pal Red(n)
- 
-Set Green n,n 
- 
-n=Pal Green(n)
- 
-Set Blue n,n 
- 
-n=Pal Blue(n)
+**Set Red color,value**
 
-Pal Spread n To n 
+    Set red in a color
+
+    ECS values 0 to 15 
+    AGA/VGA values 0x100 to 01FF
  
-Pal Swap n,n 
+**value=Pal Red(color)**
+
+    get value from color
+    return OCS/ECS value 0 to 15
  
-Pal Copy n To n 
+**Set Green color,value**
+
+    Set green in a color
+
+    ECS values 0 to 15 
+    AGA/VGA values 0x100 to 01FF
+
+**value=Pal Green(color)**
+
+    get value from color
+    return OCS/ECS value 0 to 15
  
-Reserve As Palette n,n 
+**Set Blue n,n**
+
+    Set blue in a color
+
+    ECS values 0 to 15 
+    AGA/VGA values 0x100 to 01FF
  
+**value=Pal Blue(color)**
+
+    get value from color
+    return OCS/ECS value 0 to 15
+
+**Reserve As Palette [bank number]**
+ 
+    Reserve a bank with 1 palette.
+    (Only kittyCraft, not AmosPro Craft extention) 
+
+**Reserve As Palette [bank number],[number of palettes]**
+ 
+    Reserve a bank with x number of palettes
+
 n=Pal Count(n)
  
-Pal To Bank n,n,n 
+**Pal To Bank [bank number]**
+
+    Copy current screen colors to [bank number]
+
+**Pal To Bank [bank number],[palette number]**
+
+    Copy current screen colors to [bank number] with [palette number]
+
+Pal To Bank [bank number],[palette number],[mask]
  
-Pal To Bank n,n 
+ --- don't know what mask works... (not working yet.)
  
-Pal To Bank n 
- 
-Pal From Bank n,n,n 
- 
-Pal From Bank n,n 
- 
-Pal From Bank n 
- 
-Pal Swap Bank n,n,n 
- 
-Pal Swap Bank n,n 
- 
+**Pal From Bank [bank number]**
+
+    Copy colors from bank to screen
+
+**Pal From Bank [bank number],[palette number]**
+
+    Copy colors from [bank number] with [palette number] to screen
+
+Pal From Bank [bank number],[palette number],[mask]
+
+--- don't know what mask works... (not working yet.)
+
 Pal Swap Bank n 
+
+Pal Spread n To n 
+
+Pal Copy n To n 
+
+Pal Swap n,n 
  
+Pal Swap Bank n,n
+
+Pal Swap Bank n,n,n
+
 Set Bank Colour n,n,n,n 
  
 n=Bank Colour(n,n,n)
