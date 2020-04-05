@@ -1852,10 +1852,50 @@ char *craftDiscError KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftSetRed( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	printf("args: %d\n",args);
+
+	if (args !=2)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+	else
+	{
+		struct retroScreen *screen = instance -> screens[ instance -> current_screen ];
+
+		if (screen)
+		{
+			struct retroRGB *pal;
+			int32 num = getStackNum( instance,__stack-1);
+			int32 v = getStackNum( instance,__stack );
+
+			pal = screen->orgPalette + num;
+			if (v&0x100) {
+				pal -> r = v & 0xFF;
+			} else {
+				pal -> r = v << 4 | v;
+			}
+			screen->rowPalette[num] = *pal;
+		}
+		else api.setError(22, data -> tokenBuffer);
+	}
+
+	popStack( instance, instance_stack - data->stack );
+	return NULL;
+}
+
 char *craftSetRed KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftSetRed, tokenBuffer );
 	return tokenBuffer;
 }
 
@@ -1866,10 +1906,48 @@ char *craftPalRed KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftSetGreen( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	if (args !=2)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+	else
+	{
+		struct retroScreen *screen = instance -> screens[ instance -> current_screen ];
+
+		if (screen)
+		{
+			struct retroRGB *pal;
+			int32 num = getStackNum( instance,__stack-1);
+			int32 v = getStackNum( instance,__stack );
+
+			pal = screen->orgPalette + num;
+			if (v&0x100) {
+				pal -> g = v & 0xFF;
+			} else {
+				pal -> g = v << 4 | v;
+			}
+			screen->rowPalette[num] = *pal;
+		}
+		else api.setError(22, data -> tokenBuffer);
+	}
+
+	popStack( instance, instance_stack - data->stack );
+	return NULL;
+}
+
 char *craftSetGreen KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftSetGreen, tokenBuffer );
 	return tokenBuffer;
 }
 
@@ -1880,10 +1958,48 @@ char *craftPalGreen KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftSetBlue( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	if (args !=2)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+	else
+	{
+		struct retroScreen *screen = instance -> screens[ instance -> current_screen ];
+
+		if (screen)
+		{
+			struct retroRGB *pal;
+			int32 num = getStackNum( instance,__stack-1);
+			int32 v = getStackNum( instance,__stack );
+
+			pal = screen->orgPalette + num;
+			if (v&0x100) {
+				pal -> b = v & 0xFF;
+			} else {
+				pal -> b = v << 4 | v;
+			}
+			screen->rowPalette[num] = *pal;
+		}
+		else api.setError(22, data -> tokenBuffer);
+	}
+
+	popStack( instance, instance_stack - data->stack );
+	return NULL;
+}
+
 char *craftSetBlue KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftSetBlue, tokenBuffer );
 	return tokenBuffer;
 }
 
@@ -1915,10 +2031,53 @@ char *craftPalCopy KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftReserveAsPalette(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	int bankId,pals,mask;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	api.dumpStack();
+
+	switch (args)
+	{
+		case 1:
+			bankId = getStackNum( instance,__stack );
+			pals = 1;
+			mask = 0;
+			break;
+
+		case 2:
+			bankId = getStackNum( instance,__stack -1);
+			pals = getStackNum( instance,__stack );
+			mask = 0;
+			break;
+
+		case 3:
+			bankId = getStackNum( instance,__stack -2);
+			pals = getStackNum( instance,__stack -1);
+			mask = getStackNum( instance,__stack );
+			break;
+
+		default:
+
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+	api.reserveAs( 1, bankId , 256 * 3 * pals, "Palettes", NULL );
+
+	popStack( instance, instance_stack - data->stack );
+	return NULL;
+}
+
 char *craftReserveAsPalette KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftReserveAsPalette, tokenBuffer );
 	return tokenBuffer;
 }
 
@@ -1929,17 +2088,139 @@ char *craftPalCount KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftPalToBank(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	int bankId,palId;
+	struct kittyBank *bank;
+	struct retroScreen *screen;
+	unsigned char *pal ;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	api.dumpStack();
+
+	switch (args)
+	{
+		case 1:
+			bankId = getStackNum( instance,__stack );
+			palId = 0;
+			break;
+
+		case 2:
+			bankId = getStackNum( instance,__stack -1);
+			palId = getStackNum( instance,__stack ) -1;
+			break;
+
+		default:
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+	pal = NULL;
+	bank = api.findBank( bankId );
+	screen = instance -> screens[ instance -> current_screen ];
+
+	if ((bank)&&(screen)&&(palId>-1))
+	{
+		int _size = bank -> length / (256*3);
+		if (palId < _size) 
+			pal = (unsigned char *) bank -> start + (palId * 256 * 3);
+	}
+
+	if (pal)
+	{
+		int n;
+		struct retroRGB *oPal = screen->orgPalette;
+
+		for (n=0;n<256;n++)
+		{
+			*pal++=oPal -> r;
+			*pal++=oPal -> g;
+			*pal++=oPal -> b;
+			oPal ++;
+		}
+	}
+	else api.setError(22, data -> tokenBuffer);
+
+	popStack( instance, instance_stack - data->stack );
+	return NULL;
+}
+
 char *craftPalToBank KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftPalToBank, tokenBuffer );
 	return tokenBuffer;
+}
+
+char *_craftPalFromBank(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	int bankId,palId;
+	struct kittyBank *bank;
+	struct retroScreen *screen;
+	unsigned char *pal ;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	switch (args)
+	{
+		case 1:
+			bankId = getStackNum( instance,__stack );
+			palId = 0;
+			break;
+
+		case 2:
+			bankId = getStackNum( instance,__stack -1);
+			palId = getStackNum( instance,__stack ) -1;
+			break;
+
+		default:
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+	pal = NULL;
+	bank = api.findBank( bankId );
+	screen = instance -> screens[ instance -> current_screen ];
+
+	if ((bank)&&(screen)&&(palId>-1))
+	{
+		int _size = bank -> length / (256*3);
+		if (palId < _size) 
+			pal = (unsigned char *) bank -> start + (palId * 256 * 3);
+	}
+
+	if (pal)
+	{
+		int n;
+		struct retroRGB *oPal = screen->orgPalette;
+
+		for (n=0;n<256;n++)
+		{
+			oPal -> r = *pal++;
+			oPal -> g = *pal++;
+			oPal -> b = *pal++;
+			oPal ++;
+		}
+
+		memcpy( screen->rowPalette , screen->orgPalette , sizeof(struct retroRGB ) * 256 );
+	}
+	else api.setError(22, data -> tokenBuffer);
+
+	popStack( instance, instance_stack - data->stack );
+	return NULL;
 }
 
 char *craftPalFromBank KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftPalFromBank, tokenBuffer );
 	return tokenBuffer;
 }
 
@@ -2500,7 +2781,6 @@ char *craftCraftVersion KITTENS_CMD_ARGS
 
 	return tokenBuffer;
 }
-
 
 char *craftCliHere KITTENS_CMD_ARGS
 {
