@@ -333,15 +333,15 @@ Pal From Bank [bank number],[palette number],[mask]
 
 --- don't know how mask works... (so not working yet.)
 
-Pal Spread [color index 1] To [color index 2]
+**Pal Spread [color index 1] To [color index 2]**
 
     Mix colors between color index 1 to color index 2
 
-Pal Copy [color1] To [color2]
+**Pal Copy [color1] To [color2]**
 
     Copy RGB value from color1 to color2
 
-Pal Swap [color1],[color2] 
+**Pal Swap [color1],[color2]**
 
     Swap two colors
 
@@ -373,8 +373,8 @@ n=Bank Colour([bank number],[palette],[color index])
  
 Del Bank Colour [bank number],[palette],[color index]
 
-    deletes color from bank, 
-    don't know how...
+    Deletes color from bank, 
+    -- don't know how... --
  
 Tr Exec s$,n 
  
