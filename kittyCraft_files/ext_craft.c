@@ -2010,24 +2010,153 @@ char *craftPalBlue KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftPalSpread( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	if (args !=2)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+	else
+	{
+		struct retroScreen *screen = instance -> screens[ instance -> current_screen ];
+
+		if (screen)
+		{
+			struct retroRGB *oc,*c1,*c2;
+			int32 color1 = getStackNum( instance,__stack-1);
+			int32 color2 = getStackNum( instance,__stack );
+			int dr,dg,db,d,n;
+
+			if (color1>color2)
+			{
+				int t;
+				t = color2; color2 = color1; color1 = t;
+			}
+
+			c1 = screen->orgPalette + color1;
+			c2 = screen->orgPalette + color2;
+
+			d = color2-color1;
+
+			dr = c2 -> r - c1 -> r;
+			dg = c2 -> g - c1 -> g;
+			db = c2 -> b - c1 -> b;
+
+			oc = c1;
+			c1++;
+			for (n=1;n<d;n++)
+			{
+				c1 -> r = oc -> r + (n*dr/d);
+				c1 -> g = oc -> g + (n*dg/d);
+				c1 -> b = oc -> b + (n*db/d);
+				screen->rowPalette[color1+n] = *c1;
+				c1++;
+			}
+
+
+		}
+		else api.setError(22, data -> tokenBuffer);
+	}
+
+	popStack( instance, instance_stack - data->stack );
+	return NULL;
+}
+
 char *craftPalSpread KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftPalSpread, tokenBuffer );
 	return tokenBuffer;
+}
+
+char *_craftPalSwap( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	if (args !=2)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+	else
+	{
+		struct retroScreen *screen = instance -> screens[ instance -> current_screen ];
+
+		if (screen)
+		{
+			struct retroRGB tmp;
+
+			int32 color1 = getStackNum( instance,__stack-1);
+			int32 color2 = getStackNum( instance,__stack );
+
+			tmp = screen->orgPalette[color2];
+			screen->orgPalette[color2] = screen->orgPalette[color1];
+			screen->rowPalette[color2] = screen->orgPalette[color1];
+			screen->orgPalette[color1] = tmp;
+			screen->rowPalette[color1] = tmp;
+		}
+		else api.setError(22, data -> tokenBuffer);
+	}
+
+	popStack( instance, instance_stack - data->stack );
+	return NULL;
 }
 
 char *craftPalSwap KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftPalSwap, tokenBuffer );
 	return tokenBuffer;
+}
+
+char *_craftPalCopy( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	if (args !=2)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+	else
+	{
+		struct retroScreen *screen = instance -> screens[ instance -> current_screen ];
+
+		if (screen)
+		{
+			int32 color1 = getStackNum( instance,__stack-1);
+			int32 color2 = getStackNum( instance,__stack );
+
+			screen->orgPalette[color2] = screen->orgPalette[color1];
+			screen->rowPalette[color2] = screen->orgPalette[color1];
+
+		}
+		else api.setError(22, data -> tokenBuffer);
+	}
+
+	popStack( instance, instance_stack - data->stack );
+	return NULL;
 }
 
 char *craftPalCopy KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftPalCopy, tokenBuffer );
 	return tokenBuffer;
 }
 
@@ -2081,10 +2210,49 @@ char *craftReserveAsPalette KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftPalCount(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	int bankId = -1;
+	int _size = 0;
+	struct kittyBank *bank;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	api.dumpStack();
+
+	switch (args)
+	{
+		case 1:
+			bankId = getStackNum( instance,__stack );
+			break;
+
+		default:
+
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+	if (bankId>-1)
+	{
+		bank = api.findBank( bankId );
+		if (bank)
+		{
+			_size = bank -> length / (256*3);
+		}
+	}
+
+	setStackNum( instance, _size );
+
+	return NULL;
+}
+
 char *craftPalCount KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftPalCount, tokenBuffer );
 	return tokenBuffer;
 }
 
