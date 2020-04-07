@@ -2488,17 +2488,142 @@ char *craftPalFromBank KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+
+char *_craftPalSwapBank(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	int bankNr=0,paletteNr=0,mask=0;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+
+	printf("args: %d\n",args);
+
+	switch (args)
+	{
+		case 1:
+			bankNr = getStackNum( instance,__stack );
+			break;
+
+		case 2:
+			bankNr = getStackNum( instance,__stack -1 );
+			paletteNr = getStackNum( instance,__stack )-1;
+			popStack( instance, instance_stack - data->stack );
+			break;
+
+		case 3:
+			bankNr = getStackNum( instance,__stack -2 );
+			paletteNr = getStackNum( instance,__stack -1)-1;
+			mask = getStackNum( instance,__stack );
+			popStack( instance, instance_stack - data->stack );
+			break;
+
+		default:
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+	{
+		unsigned char *pal;
+		struct retroRGB *oPal;
+		struct kittyBank *bank;
+		struct retroScreen *screen;
+		register short t;
+		int n;
+
+		bank = api.findBank( bankNr );
+		screen = instance -> screens[ instance -> current_screen ];
+
+		printf("bank: %08x\n",bank);
+		printf("screen: %08x\n",screen);
+
+		if ((bank)&&(screen)&&(paletteNr>-1))
+		{
+			oPal = screen->orgPalette;
+			pal = (unsigned char *) bank -> start + (paletteNr * 3 * 256) ;
+
+			for (n=0;n<256;n++)
+			{
+				t = *pal;
+				*pal++=oPal -> r;
+				oPal -> r = t;
+
+				t = *pal;
+				*pal++=oPal -> g;
+				oPal -> g = t;
+
+				t = *pal;
+				*pal++=oPal -> b;
+				oPal -> b = t;
+
+				oPal ++;
+			}
+
+			memcpy( screen->rowPalette , screen->orgPalette , sizeof(struct retroRGB ) * 256 );
+		}
+		else api.setError(22, data -> tokenBuffer);
+	}
+
+	return NULL;
+}
+
 char *craftPalSwapBank KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftPalSwapBank, tokenBuffer );
 	return tokenBuffer;
+}
+
+char *_craftSetBankColour(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	int bankNr=0,paletteNr=0,colorNr=0,value=0;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	switch (args)
+	{
+		case 4:
+			bankNr = getStackNum( instance,__stack -3 );
+			paletteNr = getStackNum( instance,__stack -2)-1;
+			colorNr = getStackNum( instance,__stack -1);
+			value = getStackNum( instance,__stack );
+			popStack( instance, instance_stack - data->stack );
+			break;
+
+		default:
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+	{
+		unsigned char *pal;
+		struct kittyBank *bank;
+
+		bank = api.findBank( bankNr );
+
+		if ((bank)&&(paletteNr>-1))
+		{
+			pal = (unsigned char *) bank -> start + (paletteNr * 3 * 256) + (3 * colorNr);
+
+			*pal++= ((value & 0xF00) >> 8) * 0x11;
+			*pal++= ((value & 0x0F0) >> 4) * 0x11;
+			*pal++= (value & 0x00F) * 0x11;
+		}
+		else api.setError(22, data -> tokenBuffer);
+	}
+
+	return NULL;
 }
 
 char *craftSetBankColour KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftSetBankColour, tokenBuffer );
 	return tokenBuffer;
 }
 
