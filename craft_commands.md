@@ -345,11 +345,11 @@ Pal From Bank [bank number],[palette number],[mask]
 
     Swap two colors
 
-Pal Swap Bank [bank]
+**Pal Swap Bank [bank]**
 
     Swaps the current palette with the bank 
  
-Pal Swap Bank [bank],[color]
+**Pal Swap Bank [bank],[color]**
 
     Swaps the current palette with the bank, starting with [color].
 
@@ -358,7 +358,7 @@ Pal Swap Bank [bank],[color],[mask]
     Swaps the current palette with the bank, starting with [color].
     mask limits the colors transfared to the bank.
 
-Set Bank Colour [bank number],[palette],[color number],[value]
+*Set Bank Colour [bank number],[palette],[color number],[value]*
 
     Changes the [color number] in [palette] in the [bank number] with [value]
 
