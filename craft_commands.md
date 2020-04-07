@@ -358,7 +358,7 @@ Pal Swap Bank [bank],[color],[mask]
     Swaps the current palette with the bank, starting with [color].
     mask limits the colors transfared to the bank.
 
-*Set Bank Colour [bank number],[palette],[color number],[value]*
+**Set Bank Colour [bank number],[palette],[color number],[value]**
 
     Changes the [color number] in [palette] in the [bank number] with [value]
 
@@ -367,14 +367,16 @@ Pal Swap Bank [bank],[color],[mask]
     [value] is in the range $000 to $FFF for OCS/ECS
     [value] is in the range $FF000000 to $FFFFFFFF for 24bit RGB (VGA/AGA)
  
-n=Bank Colour([bank number],[palette],[color index])
+**n=Bank Colour([bank number],[palette],[color index])**
 
     Returns the color in [color index] of [palette] stored in [bank number].
  
-Del Bank Colour [bank number],[palette],[color index]
+**Del Bank Colour [bank number],[palette],[color index]**
 
-    Deletes color from bank, 
-    -- don't know how... --
+    Deletes color from bank.
+    After deleting color, it will be ignoring when using “Pal from bank” command.
+
+    (Using Bank Colour on a deleted color will return $FFF.)
  
 Tr Exec s$,n 
  
