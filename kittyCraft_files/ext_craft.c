@@ -2650,17 +2650,109 @@ char *craftSetBankColour KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftBankColour(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	int bankNr=0,paletteNr=0,colorNr=0;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	printf("args: %d\n",args);
+
+	switch (args)
+	{
+		case 3:
+			bankNr = getStackNum( instance,__stack -2 );
+			paletteNr = getStackNum( instance,__stack -1)-1;
+			colorNr = getStackNum( instance,__stack );
+			popStack( instance, instance_stack - data->stack );
+			break;
+
+		default:
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+	{
+		unsigned int *pal;
+		struct kittyBank *bank;
+
+		bank = api.findBank( bankNr );
+
+		if ((bank)&&(paletteNr>-1))
+		{
+			pal = (unsigned int *) (bank -> start + (paletteNr * 4 * 256) + (4 * colorNr));
+			// convert to OCS / ECS
+			setStackNum( instance, 
+				(( *pal & 0x00F00000 ) >>12) | 
+				(( *pal & 0x0000F000 ) >>8) |
+				(( *pal & 0x000000F0 ) >> 4)  );
+		}
+		else api.setError(22, data -> tokenBuffer);
+	}
+
+	return NULL;
+}
+
 char *craftBankColour KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftBankColour, tokenBuffer );
 	return tokenBuffer;
+}
+
+char *_craftDelBankColour(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	int bankNr=0,paletteNr=0,colorNr=0;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	printf("args: %d\n",args);
+
+	switch (args)
+	{
+		case 3:
+			bankNr = getStackNum( instance,__stack -2 );
+			paletteNr = getStackNum( instance,__stack -1)-1;
+			colorNr = getStackNum( instance,__stack );
+			popStack( instance, instance_stack - data->stack );
+			break;
+
+		default:
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+	{
+		unsigned char *pal;
+		struct kittyBank *bank;
+
+		bank = api.findBank( bankNr );
+
+		if ((bank)&&(paletteNr>-1))
+		{
+			pal = (unsigned char *) bank -> start + (paletteNr * 4 * 256) + (4 * colorNr);
+
+			*pal++ =0x00;	// deactivate colour
+			*pal++= 0xFF;
+			*pal++= 0xFF;
+			*pal++= 0xFF;
+		}
+		else api.setError(22, data -> tokenBuffer);
+	}
+
+	return NULL;
 }
 
 char *craftDelBankColour KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftDelBankColour, tokenBuffer );
 	return tokenBuffer;
 }
 
