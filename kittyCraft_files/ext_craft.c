@@ -2293,7 +2293,7 @@ char *_craftReserveAsPalette(  struct glueCommands *data, int nextToken )
 			return NULL;
 	}
 
-	api.reserveAs( 1, bankId , 256 * 3 * pals, "Palettes", NULL );
+	api.reserveAs( 1, bankId , 256 * 4 * pals, "Palettes", NULL );
 
 	popStack( instance, instance_stack - data->stack );
 	return NULL;
@@ -2336,7 +2336,7 @@ char *_craftPalCount(  struct glueCommands *data, int nextToken )
 		bank = api.findBank( bankId );
 		if (bank)
 		{
-			_size = bank -> length / (256*3);
+			_size = bank -> length / (256*4);
 		}
 	}
 
@@ -2389,9 +2389,9 @@ char *_craftPalToBank(  struct glueCommands *data, int nextToken )
 
 	if ((bank)&&(screen)&&(palId>-1))
 	{
-		int _size = bank -> length / (256*3);
+		int _size = bank -> length / (256*4);
 		if (palId < _size) 
-			pal = (unsigned char *) bank -> start + (palId * 256 * 3);
+			pal = (unsigned char *) bank -> start + (palId * 256 * 4);
 	}
 
 	if (pal)
@@ -2401,6 +2401,7 @@ char *_craftPalToBank(  struct glueCommands *data, int nextToken )
 
 		for (n=0;n<256;n++)
 		{
+			*pal++=0xFF;
 			*pal++=oPal -> r;
 			*pal++=oPal -> g;
 			*pal++=oPal -> b;
@@ -2455,9 +2456,9 @@ char *_craftPalFromBank(  struct glueCommands *data, int nextToken )
 
 	if ((bank)&&(screen)&&(palId>-1))
 	{
-		int _size = bank -> length / (256*3);
+		int _size = bank -> length / (256*4);
 		if (palId < _size) 
-			pal = (unsigned char *) bank -> start + (palId * 256 * 3);
+			pal = (unsigned char *) bank -> start + (palId * 256 * 4);
 	}
 
 	if (pal)
@@ -2467,9 +2468,14 @@ char *_craftPalFromBank(  struct glueCommands *data, int nextToken )
 
 		for (n=0;n<256;n++)
 		{
-			oPal -> r = *pal++;
-			oPal -> g = *pal++;
-			oPal -> b = *pal++;
+			if (*pal++)
+			{
+				oPal -> r = *pal++;
+				oPal -> g = *pal++;
+				oPal -> b = *pal++;
+			}
+			else pal+=3;
+
 			oPal ++;
 		}
 
@@ -2542,21 +2548,25 @@ char *_craftPalSwapBank(  struct glueCommands *data, int nextToken )
 		if ((bank)&&(screen)&&(paletteNr>-1))
 		{
 			oPal = screen->orgPalette;
-			pal = (unsigned char *) bank -> start + (paletteNr * 3 * 256) ;
+			pal = (unsigned char *) bank -> start + (paletteNr * 4 * 256) ;
 
 			for (n=0;n<256;n++)
 			{
-				t = *pal;
-				*pal++=oPal -> r;
-				oPal -> r = t;
+				if (*pal++)
+				{
+					t = *pal;
+					*pal++=oPal -> r;
+					oPal -> r = t;
 
-				t = *pal;
-				*pal++=oPal -> g;
-				oPal -> g = t;
+					t = *pal;
+					*pal++=oPal -> g;
+					oPal -> g = t;
 
-				t = *pal;
-				*pal++=oPal -> b;
-				oPal -> b = t;
+					t = *pal;
+					*pal++=oPal -> b;
+					oPal -> b = t;
+				}
+				else pal+=3;
 
 				oPal ++;
 			}
@@ -2601,18 +2611,31 @@ char *_craftSetBankColour(  struct glueCommands *data, int nextToken )
 	}
 
 	{
-		unsigned char *pal;
+
 		struct kittyBank *bank;
 
 		bank = api.findBank( bankNr );
 
 		if ((bank)&&(paletteNr>-1))
 		{
-			pal = (unsigned char *) bank -> start + (paletteNr * 3 * 256) + (3 * colorNr);
+			if (value & 0xFF000000)
+			{
+				unsigned int *pal = (unsigned int *) (bank -> start + (paletteNr * 4 * 256) + (4 * colorNr));
+				// this is for bigendien
+				*pal = value;
+			}
+			else
+			{
+				unsigned char *pal = (unsigned char *) (bank -> start + (paletteNr * 4 * 256) + (4 * colorNr));
 
-			*pal++= ((value & 0xF00) >> 8) * 0x11;
-			*pal++= ((value & 0x0F0) >> 4) * 0x11;
-			*pal++= (value & 0x00F) * 0x11;
+				printf("paletteNr %d colorNr %d value %03x\n",paletteNr, colorNr,value);
+				printf("%ld\n", (char *) pal - bank -> start );
+
+				*pal++ = 0xFF;
+				*pal++= ((value & 0xF00) >> 8) * 0x11;
+				*pal++= ((value & 0x0F0) >> 4) * 0x11;
+				*pal++= (value & 0x00F) * 0x11;
+			}
 		}
 		else api.setError(22, data -> tokenBuffer);
 	}
