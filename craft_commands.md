@@ -495,16 +495,18 @@ Cli Execute s$
 Cli Print s$ 
  
 Guru Meditation n,n 
- 
-n=Guru Alert(s$,s$,s$,s$,s$)
- 
-n=Guru Alert(s$,s$,s$,s$)
- 
-n=Guru Alert(s$,s$,s$)
 
-n=Guru Alert(s$,s$)
- 
-n=Guru Alert(s$)
+**n=Guru Alert(s1$)**
+**n=Guru Alert(s1$,s2$)**
+**n=Guru Alert(s1$,s2$,s3$)**
+**n=Guru Alert(s1$,s2$,s3$,s4$)**
+**n=Guru Alert(s1$,s2$,s3$,s4$,s5$)**
+
+    Show an old-style Guru Alert message, 
+    (don’t worry totally safe as it’s a fake Guru.)
+    Command takes 1 to 5 text string, etch text represents a line.
+
+    Command returns mouse button pressed.
  
 Multi On  
  
