@@ -23,7 +23,9 @@ struct Window *open_window()
 {
 	struct Screen *screen = LockPubScreen(NULL);
 
-	alart_window = OpenWindowTags( NULL,
+	if (screen)
+	{
+		alart_window = OpenWindowTags( NULL,
 				WA_Left,			0,
 				WA_Top,			0,
 				WA_InnerWidth,		screen -> Width,
@@ -41,6 +43,12 @@ struct Window *open_window()
 				WA_Flags, WFLG_RMBTRAP| WFLG_REPORTMOUSE,
 				WA_IDCMP,           IDCMP_COMMON,
 			TAG_DONE);
+
+
+		UnlockPubScreen(NULL, screen);
+		screen = NULL;
+	}
+
 
 	return alart_window ;
 }
