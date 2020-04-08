@@ -497,9 +497,13 @@ Cli Print s$
 Guru Meditation n,n 
 
 **n=Guru Alert(s1$)**
+
 **n=Guru Alert(s1$,s2$)**
+
 **n=Guru Alert(s1$,s2$,s3$)**
+
 **n=Guru Alert(s1$,s2$,s3$,s4$)**
+
 **n=Guru Alert(s1$,s2$,s3$,s4$,s5$)**
 
     Show an old-style Guru Alert message, 
@@ -524,16 +528,24 @@ Set Wb Prefs n,n,n
  
 Set Wb Prefs n,n 
  
-n=Sys Request(s$,s$,s$,s$,s$,s$,s$)
- 
-n=Sys Request(s$,s$,s$,s$,s$,s$)
- 
-n=Sys Request(s$,s$,s$,s$,s$)
- 
-n=Sys Request(s$,s$,s$,s$)
+**n=Sys Request(s1$,Ok$,Cancel$)**
 
-n=Sys Request(s$,s$,s$)
- 
+**n=Sys Request(s1$,s2$,Ok$,Cancel$)**
+
+**n=Sys Request(s1$,s2$,s3$,Ok$,Cancel$)**
+
+**n=Sys Request(s1$,s2$,s3$,s4$,Ok$,Cancel$)**
+
+**n=Sys Request(s1$,s2$,s3$,s4$,s5$,Ok$,Cancel$)**
+
+    Display system requestor 
+
+    S1$ to S5$ as text lines in the requestor.
+    Ok$ is OK bottom, returns true.
+    Cancel$ is Cancel button, returns false.
+    (Your are allowed on Amos kittens to hack the buttons using “|” symbol, 
+        this will inserts more buttons.)
+
 Hard Reset  
  
 Warm Reset  
