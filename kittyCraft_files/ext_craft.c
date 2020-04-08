@@ -42,6 +42,8 @@
 
 #define max(a,b) ((a)>(b)?(a):(b))
 
+extern int guruAlert( int nargs, struct stringData **args );
+
 char *_craftUpCaseSTR(  struct glueCommands *data, int nextToken )
 {
 	struct KittyInstance *instance = data -> instance;
@@ -3127,10 +3129,60 @@ char *craftGuruMeditation KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftGuruAlert( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	uint32 ret;
+	struct stringData *argStr[5];
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	switch (args)
+	{
+		case 1:
+			argStr[0] = getStackString( instance,__stack);
+			break;
+		case 2:
+			argStr[0] = getStackString( instance,__stack -1);
+			argStr[1] = getStackString( instance,__stack);
+			break;
+		case 3:
+			argStr[0] = getStackString( instance,__stack-2);
+			argStr[1] = getStackString( instance,__stack-1);
+			argStr[2] = getStackString( instance,__stack);
+			break;
+		case 4:
+			argStr[0] = getStackString( instance,__stack-3);
+			argStr[1] = getStackString( instance,__stack-2);
+			argStr[2] = getStackString( instance,__stack-1);
+			argStr[3] = getStackString( instance,__stack);
+			break;
+		case 5:
+			argStr[0] = getStackString( instance,__stack-4);
+			argStr[1] = getStackString( instance,__stack-3);
+			argStr[2] = getStackString( instance,__stack-2);
+			argStr[3] = getStackString( instance,__stack-1);
+			argStr[4] = getStackString( instance,__stack);
+			break;
+		default:
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+	ret = guruAlert( args, argStr );
+
+	popStack( instance, instance_stack - data->stack );
+	setStackNum( instance, ret );
+	return NULL;
+}
+
+
 char *craftGuruAlert KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftGuruAlert, tokenBuffer );
 	return tokenBuffer;
 }
 

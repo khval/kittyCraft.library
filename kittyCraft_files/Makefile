@@ -42,7 +42,8 @@ main_SRCS = main/Obtain.c main/Release.c main/makeLookupTable.c \
 	AmosString.c \
 	stack.c \
 	cmdList.c \
-	ext_craft.c
+	ext_craft.c \
+	alart.c
 
 # -------------------------------------------------------------
 # Nothing should need changing below this line

@@ -46,13 +46,20 @@ struct _Library
  *
  */
 
-struct ExecIFace *IExec = NULL;
-struct NewlibIFace * INewlib = NULL;
-struct retroIFace * IRetroMode = NULL;
-struct DOSIFace *IDOS = NULL;
-struct Library *NewLibBase = NULL;
-struct Library *RetroModeBase = NULL;
-struct Library *DOSBase = NULL;
+struct ExecIFace		*IExec = NULL;
+struct NewlibIFace		*INewlib = NULL;
+struct retroIFace		*IRetroMode = NULL;
+struct DOSIFace		*IDOS = NULL;
+struct GraphicsIFace		*IGraphics = NULL;
+struct IntuitionIFace		*IIntuition = NULL;
+
+struct Library	*NewLibBase = NULL;
+struct Library	*RetroModeBase = NULL;
+struct Library	*DOSBase = NULL;
+struct Library	*GraphicsBase = NULL;
+struct Library	*IntuitionBase = NULL;
+
+
 
 #define close_lib(b,i)			\
 	if (b) IExec->CloseLibrary(b);	\
@@ -65,6 +72,8 @@ void close_libs()
 	close_lib( DOSBase, IDOS);
 	close_lib( NewLibBase, INewlib);
 	close_lib( RetroModeBase, IRetroMode);
+	close_lib( IntuitionBase, IIntuition);
+	close_lib( GraphicsBase, IGraphics);
 }
 
 BOOL open_lib( const char *name, int ver , const char *iname, int iver, struct Library **base, struct Interface **interface)
@@ -91,6 +100,8 @@ BOOL init()
 	if ( ! open_lib( "dos.library", 53L , "main", 1, &DOSBase, (struct Interface **) &IDOS  ) ) return FALSE;
 	if ( ! open_lib( "newlib.library", 53L , "main", 1, &NewLibBase, (struct Interface **) &INewlib  ) ) return FALSE;
 	if ( ! open_lib( "retromode.library", 1L , "main", 1, &RetroModeBase, (struct Interface **) &IRetroMode  ) ) return FALSE;
+	if ( ! open_lib( "intuition.library", 51L , "main", 1, &IntuitionBase, (struct Interface **) &IIntuition  ) ) return FALSE;
+	if ( ! open_lib( "graphics.library", 54L , "main", 1, &GraphicsBase, (struct Interface **) &IGraphics  ) ) return FALSE;
 
 	return TRUE;
 }
