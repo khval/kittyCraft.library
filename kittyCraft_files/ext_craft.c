@@ -44,6 +44,10 @@
 
 extern int guruAlert( int nargs, struct stringData **args );
 
+extern int request( char *title, int nargs, struct stringData **args, 
+				struct stringData *okButton,struct stringData *cancelButton, 
+				ULONG image );
+
 char *_craftUpCaseSTR(  struct glueCommands *data, int nextToken )
 {
 	struct KittyInstance *instance = data -> instance;
@@ -2630,9 +2634,6 @@ char *_craftSetBankColour(  struct glueCommands *data, int nextToken )
 			{
 				unsigned char *pal = (unsigned char *) (bank -> start + (paletteNr * 4 * 256) + (4 * colorNr));
 
-				printf("paletteNr %d colorNr %d value %03x\n",paletteNr, colorNr,value);
-				printf("%ld\n", (char *) pal - bank -> start );
-
 				*pal++ = 0xFF;
 				*pal++= ((value & 0xF00) >> 8) * 0x11;
 				*pal++= ((value & 0x0F0) >> 4) * 0x11;
@@ -3228,10 +3229,73 @@ char *craftWbPrefs KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftSysRequest( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	uint32 ret;
+	struct stringData *argStr[6];
+	struct stringData *ok,*cancel;
+
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	switch (args)
+	{
+		case 3:
+			argStr[0] = getStackString( instance,__stack-2);
+			ok		= getStackString( instance,__stack-1);
+			cancel	= getStackString( instance,__stack);
+			ret = request("Sys request", 1, argStr, ok, cancel, 0 );
+			break;
+		case 4:
+			argStr[0] = getStackString( instance,__stack-3);
+			argStr[1] = getStackString( instance,__stack-2);
+			ok		= getStackString( instance,__stack-1);
+			cancel	= getStackString( instance,__stack);
+			ret = request("Sys request", 2, argStr, ok, cancel, 0 );
+			break;
+		case 5:
+			argStr[0] = getStackString( instance,__stack-4);
+			argStr[1] = getStackString( instance,__stack-3);
+			argStr[2] = getStackString( instance,__stack-2);
+			ok		= getStackString( instance,__stack-1);
+			cancel	= getStackString( instance,__stack);
+			ret = request("Sys request", 3, argStr, ok, cancel, 0 );
+			break;
+		case 6:
+			argStr[0] = getStackString( instance,__stack-5);
+			argStr[1] = getStackString( instance,__stack-4);
+			argStr[2] = getStackString( instance,__stack-3);
+			argStr[3] = getStackString( instance,__stack-2);
+			ok		= getStackString( instance,__stack-1);
+			cancel	= getStackString( instance,__stack);
+			ret = request("Sys request", 4, argStr, ok, cancel, 0 );
+			break;
+		case 7:
+			argStr[0] = getStackString( instance,__stack-6);
+			argStr[1] = getStackString( instance,__stack-5);
+			argStr[2] = getStackString( instance,__stack-4);
+			argStr[3] = getStackString( instance,__stack-3);
+			argStr[4] = getStackString( instance,__stack-2);
+			ok		= getStackString( instance,__stack-1);
+			cancel	= getStackString( instance,__stack);
+			ret = request("Sys request", 5, argStr, ok, cancel, 0 );
+			break;
+		default:
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+	popStack( instance, instance_stack - data->stack );
+	setStackNum( instance, ret );
+	return NULL;
+}
+
 char *craftSysRequest KITTENS_CMD_ARGS
 {
 	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftSysRequest, tokenBuffer );
 	return tokenBuffer;
 }
 

@@ -43,7 +43,8 @@ main_SRCS = main/Obtain.c main/Release.c main/makeLookupTable.c \
 	stack.c \
 	cmdList.c \
 	ext_craft.c \
-	alart.c
+	alart.c \
+	request.c 
 
 # -------------------------------------------------------------
 # Nothing should need changing below this line
