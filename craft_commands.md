@@ -508,8 +508,12 @@ Fr Mandelbrot n
     so this command should not do anything.
 
 Wb To Back  
- 
+
+    This command does not do anything.
+
 Wb To Front  
+
+    This command does not do anything.
  
 Cli Execute s$ 
  
@@ -533,21 +537,19 @@ Guru Meditation n,n
 
     Command returns mouse button pressed.
  
-Multi On  
+Multi On
  
-Multi Off  
+Multi Off
  
 Set Amos Pri n 
+
+    This command sets task pri of Amos Kittens.
  
-n=Amos Pri  
- 
-Wb Def Prefs n,n 
- 
-Wb Prefs n,n 
- 
-Set Wb Prefs n,n,n 
- 
-Set Wb Prefs n,n 
+n=Amos Pri
+
+    This command should returns Amos Kittens Pri.
+
+    (this command is broken in AmosPro Craft extension.)
  
 **n=Sys Request(s1$,Ok$,Cancel$)**
 
@@ -608,14 +610,43 @@ Gr Centre n,s$
     $04030201 becomes $02010403
 
 n=Cli Here  
- 
+
+    Returns always TRUE.
+
 n=Amos Pro  
 
 # The following commands are not supported.
 
+Wb Def Prefs [address],[length] 
+
+    Does the same as bload more or less, but copies the prefs file to bank
+
+    Command will return error if executed.
+
+Wb Prefs [address],[length]  
+ 
+    Does the same as bload more or less, but copies the prefs file to bank
+
+    Command will return error if executed.
+
+Set Wb Prefs n,n,n 
+ 
+    Prefs files are not backwards compatible, not vice to peek and poke into systems files.
+    Until AmigaOS adapts JSON or XML prefs or provide a standard software API, we should do this.
+
+    Command will return error if executed.
+
+Set Wb Prefs n,n 
+
+    Prefs files are not backwards compatible, not vice to peek and poke into systems files.
+    Until AmigaOS adapts JSON or XML prefs or provide a standard software API, we should do this.
+
+    Command will return error if executed.
+
 n=Amos Base  
 
-    Its not legal to poke into Amos Kitty Base, as not the same as Amos Base.
+    Its not legal to poke into Amos Kitty Base, 
+    as its not the same as Amos Base.
 
 Hard Reset  
  
