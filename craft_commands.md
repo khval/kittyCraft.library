@@ -544,12 +544,22 @@ Guru Meditation n,n
 **Multi On**
 
     Enable multitasking, calls function exec.library/permit()
+
+    You need too call “Multi On” equality number of times as “Multi Off” is executed, 
+    it should be safe to use this command in reclusive loop, but you probably should not. 
  
 **Multi Off**
 
     Disable multitasking, executes function exec.library/forbid()
 
-    Do not abuse this command, on AmigaOS4.1 the mouse, keyboard, audio needs multitasking, disabling multitasking for a long time course bad sound, keyboard / mouse locking up, and other issues, 
+    Do not abuse this command!!!
+    This is not a magic bullet, it should not be used to speed up your basic program.
+
+    On AmigaOS4.1 the mouse, keyboard, audio, +++, needs multitasking, disabling multitasking
+    for a long-time course bad sound, keyboard / mouse locking up, plus graphics will not be updated,
+    if multitasking is disabled, some of the basic command might result in dead locks,
+    as it they might wait for graphic engine, or a system event,
+    that will never happen, while multitasking is disabled.
 
     If you need safe atomic protection, look at the OS4.1 SDK in the folder. 
     “SDK:Documentation/Autodocs/exec.h”, See functions MutexObtain() and MutexRelease().
