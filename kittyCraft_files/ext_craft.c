@@ -3441,7 +3441,7 @@ char *craftWarmReset KITTENS_CMD_ARGS
 char *craftHwMouseKey KITTENS_CMD_ARGS
 {
 	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	setStackNum( instance, instance -> engine_mouse_key );
 	return tokenBuffer;
 }
 
