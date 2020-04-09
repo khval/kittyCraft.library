@@ -6,12 +6,13 @@ Commands listed as
 **bold**
 are commands that are implemented.
 
-**italic**
+Commands listed as
+*italic*
 are commands started on.
 
-command without no description, are not implemented.
+Command without description, are not implemented.
 
-At bottom of the list you will find non supported commands.
+At bottom of the list you will find none supported commands.
 
 # List of commands
 
