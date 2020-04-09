@@ -507,17 +507,21 @@ Fr Mandelbrot n
     Amos Kittens will never close Workbench to save memory, 
     so this command should not do anything.
 
-Wb To Back  
+**Wb To Back**
 
     This command does not do anything.
 
-Wb To Front  
+**Wb To Front**
 
     This command does not do anything.
  
-Cli Execute s$ 
+**Cli Execute [script$]**
  
-Cli Print s$ 
+    Pipe script and execute the commands from pipe.
+
+**Cli Print s$**
+
+    Print text to shell / cli
  
 Guru Meditation n,n 
 
@@ -541,11 +545,11 @@ Multi On
  
 Multi Off
  
-Set Amos Pri n 
+**Set Amos Pri n**
 
     This command sets task pri of Amos Kittens.
  
-n=Amos Pri
+**n=Amos Pri**
 
     This command should returns Amos Kittens Pri.
 
@@ -609,11 +613,13 @@ Gr Centre n,s$
 
     $04030201 becomes $02010403
 
-n=Cli Here  
+**n=Cli Here**
 
     Returns always TRUE.
 
-n=Amos Pro  
+**n=Amos Pro**
+
+    Returns always TRUE.
 
 # The following commands are not supported.
 
