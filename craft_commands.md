@@ -561,6 +561,7 @@ Guru Meditation n,n
     as it they might wait for graphic engine, or a system event,
     that will never happen, while multitasking is disabled.
 
+
     If you need safe atomic protection, look at the OS4.1 SDK in the folder. 
     “SDK:Documentation/Autodocs/exec.h”, See functions MutexObtain() and MutexRelease().
 
@@ -595,7 +596,14 @@ Guru Meditation n,n
     (Your are allowed on Amos kittens to hack the buttons using “|” symbol, 
         this will insert more buttons.)
 
-n=Hw Mouse Key  
+**n=Hw Mouse Key**
+
+    Should allow you read mouse key, if Amos is displayed or not, this not the case for Amos Kittens,
+    this command does exactly the same as “Mouse Key” only slightly slower by few nano seconds.
+    Never assume this command work under “multi off”.
+
+    (It is possible to implement this command more correct using amigainput.device, but it will never be 
+    direct access to the hardware on AmigaOS4.1 / AmigaOne hardware. )
  
 **n=Gr Ink**
 
