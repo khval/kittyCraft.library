@@ -38,7 +38,7 @@
 #define alloc_private(x) AllocVecTags( x , AVT_Type, MEMF_PRIVATE, TAG_END )
 #define alloc_shared(x) AllocVecTags( x , AVT_Type, MEMF_SHARED, TAG_END )
 
-#define proc_names_printf printf
+#define proc_names_dprintf dprintf
 
 #define max(a,b) ((a)>(b)?(a):(b))
 
@@ -48,6 +48,12 @@ extern int request( char *title, int nargs, struct stringData **args,
 				struct stringData *okButton,struct stringData *cancelButton, 
 				ULONG image );
 
+#ifdef debug
+	#define dprintf printf
+#else
+	#define dprintf(fmt,...)
+#endif
+
 char *_craftUpCaseSTR(  struct glueCommands *data, int nextToken )
 {
 	struct KittyInstance *instance = data -> instance;
@@ -55,7 +61,7 @@ char *_craftUpCaseSTR(  struct glueCommands *data, int nextToken )
 	struct stringData *str;
 	char *s;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=1)
 	{
@@ -75,7 +81,7 @@ char *_craftUpCaseSTR(  struct glueCommands *data, int nextToken )
 
 char *craftUpCaseSTR KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	stackCmdParm( _craftUpCaseSTR, tokenBuffer );	// we need to store the step counter.
 	return tokenBuffer;
@@ -88,7 +94,7 @@ char *_craftLoCaseSTR( struct glueCommands *data, int nextToken )
 	struct stringData *str;
 	char *s;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=1)
 	{
@@ -108,7 +114,7 @@ char *_craftLoCaseSTR( struct glueCommands *data, int nextToken )
 
 char *craftLoCaseSTR KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftLoCaseSTR, tokenBuffer );
 	return tokenBuffer;
 }
@@ -120,7 +126,7 @@ char *_craftFlipCaseSTR( struct glueCommands *data, int nextToken )
 	struct stringData *str;
 	char *s;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=1)
 	{
@@ -151,7 +157,7 @@ char *_craftFlipCaseSTR( struct glueCommands *data, int nextToken )
 
 char *craftFlipCaseSTR KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftFlipCaseSTR, tokenBuffer );
 	return tokenBuffer;
 }
@@ -163,7 +169,7 @@ char *_craftLeftTrimSTR( struct glueCommands *data, int nextToken )
 	struct stringData *str,*remove;
 	struct stringData *newStr;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -215,11 +221,11 @@ char *_craftLeftTrimSTR( struct glueCommands *data, int nextToken )
 			found = false;
 			for (n2=0;n2<remove -> size;n2++)
 			{
-				printf("%c is %c?\n",d[n2],c);
+				dprintf("%c is %c?\n",d[n2],c);
 
 				if (d[n2] == c )
 				{
-					printf("%c",c);
+					dprintf("%c",c);
 
 					found = true;
 					break;
@@ -242,7 +248,7 @@ char *_craftLeftTrimSTR( struct glueCommands *data, int nextToken )
 
 char *craftLeftTrimSTR KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftLeftTrimSTR, tokenBuffer );
 	return tokenBuffer;
 }
@@ -254,7 +260,7 @@ char *_craftRightTrimSTR( struct glueCommands *data, int nextToken )
 	struct stringData *str,*remove;
 	struct stringData *newStr;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -270,13 +276,13 @@ char *_craftRightTrimSTR( struct glueCommands *data, int nextToken )
 				src = &(str -> ptr);
 				for (n=str->size-1;n>-1;n--)
 				{
-					printf("[%d]=%c\n",n,src[n]);
+					dprintf("[%d]=%c\n",n,src[n]);
 
 					if ( src[n] != ' ' ) break;
 					toRemove ++;
 				}
 
-				printf("remove %d\n", toRemove);
+				dprintf("remove %d\n", toRemove);
 
 				newStr = amos_strndup( str, str->size - toRemove );
 				setStackStr( instance, newStr);
@@ -334,7 +340,7 @@ char *_craftRightTrimSTR( struct glueCommands *data, int nextToken )
 
 char *craftRightTrimSTR KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftRightTrimSTR, tokenBuffer );
 	return tokenBuffer;
 }
@@ -346,7 +352,7 @@ char *_craftBwInstr(  struct glueCommands *data, int nextToken )
 	struct stringData *txt=NULL,*item=NULL;
 	int size;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -380,11 +386,11 @@ char *_craftBwInstr(  struct glueCommands *data, int nextToken )
 		size -= max(item -> size - 1,0);
 		int n,ret =0;
 
-		printf("size: %d\n",size);
+		dprintf("size: %d\n",size);
 
 		for (n=0;n<size;n++)
 		{
-			printf("%s--%s\n",ptr+n,itemPtr);
+			dprintf("%s--%s\n",ptr+n,itemPtr);
 
 			if (strncasecmp(ptr+n,itemPtr,item->size)==0)
 			{
@@ -402,7 +408,7 @@ char *_craftBwInstr(  struct glueCommands *data, int nextToken )
 
 char *craftBwInstr KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftBwInstr, tokenBuffer );
 	return tokenBuffer;
 }
@@ -413,7 +419,7 @@ char *_craftChrConvSTR(  struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	switch (args)
 	{
@@ -449,7 +455,7 @@ char *_craftChrConvSTR(  struct glueCommands *data, int nextToken )
 
 char *craftChrConvSTR KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftChrConvSTR, tokenBuffer );
 	return tokenBuffer;
 }
@@ -461,7 +467,7 @@ char *_craftStrCount(  struct glueCommands *data, int nextToken )
 	struct stringData *txt=NULL,*item=NULL;
 	int size;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -500,7 +506,7 @@ char *_craftStrCount(  struct glueCommands *data, int nextToken )
 
 char *craftStrCount KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftStrCount, tokenBuffer );
 	return tokenBuffer;
 }
@@ -511,7 +517,7 @@ char *_craftMemStrCount(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	int cnt = 0;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -562,7 +568,7 @@ char *_craftMemStrCount(  struct glueCommands *data, int nextToken )
 
 char *craftMemStrCount KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftMemStrCount, tokenBuffer );
 	return tokenBuffer;
 }
@@ -587,9 +593,9 @@ char *_craftStrScrambleSTR(  struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
-	printf("args: %d\n",args);
+	dprintf("args: %d\n",args);
 
 	api.dumpStack();
 
@@ -622,14 +628,14 @@ char *_craftStrScrambleSTR(  struct glueCommands *data, int nextToken )
 
 char *craftStrScrambleSTR KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftStrScrambleSTR, tokenBuffer );
 	return tokenBuffer;
 }
 
 char *craftStrUnscrambleSTR KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftStrScrambleSTR, tokenBuffer );
 	return tokenBuffer;
 }
@@ -641,9 +647,9 @@ char *_craftHexDumpSTR(  struct glueCommands *data, int nextToken )
 	char *adr = NULL;
 	int len = 0, sep =0;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
-	printf("args: %d\n",args);
+	dprintf("args: %d\n",args);
 
 	api.dumpStack();
 
@@ -700,7 +706,7 @@ char *_craftHexDumpSTR(  struct glueCommands *data, int nextToken )
 
 char *craftHexDumpSTR KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftHexDumpSTR, tokenBuffer );
 	return tokenBuffer;
 }
@@ -710,7 +716,7 @@ char *_craftChrDumpSTR(  struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	switch (args)
 	{
@@ -749,7 +755,7 @@ char *_craftChrDumpSTR(  struct glueCommands *data, int nextToken )
 
 char *craftChrDumpSTR KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftChrDumpSTR, tokenBuffer );
 	return tokenBuffer;
 }
@@ -764,9 +770,9 @@ char *_craftStrPeekSTR(  struct glueCommands *data, int nextToken )
 	struct stringData *newStr;
 	unsigned char *dest;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
-	printf("args: %d\n",args);
+	dprintf("args: %d\n",args);
 
 	switch (args)
 	{
@@ -785,7 +791,7 @@ char *_craftStrPeekSTR(  struct glueCommands *data, int nextToken )
 				term = getStackString( instance,__stack );
 				termchar = (int) ((unsigned char) term -> ptr);
 
-				printf("3 args\n");
+				dprintf("3 args\n");
 			}
 			break;
 
@@ -808,21 +814,21 @@ char *_craftStrPeekSTR(  struct glueCommands *data, int nextToken )
 			dest[n]=adr[n];
 		}
 
-		printf("written\n");
+		dprintf("written\n");
 	}
 	else
 	{
 		int n;
 		unsigned char c;
 
-		printf("len %d termchar %c\n",len,termchar);
+		dprintf("len %d termchar %c\n",len,termchar);
 
 		for (n=0;n<len;n++)
 		{
 			c=adr[n];
 			if (c == (char) termchar ) 
 			{
-				printf("n %d\n",n);
+				dprintf("n %d\n",n);
 				newStr -> size  = n;
 				dest[n]=0; 
 				break; 
@@ -839,7 +845,7 @@ char *_craftStrPeekSTR(  struct glueCommands *data, int nextToken )
 
 char *craftStrPeekSTR KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftStrPeekSTR, tokenBuffer );
 	return tokenBuffer;
 }
@@ -853,7 +859,7 @@ char *_craftStrPoke(  struct glueCommands *data, int nextToken )
 	struct stringData *str;
 	int n;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -886,21 +892,21 @@ char *_craftStrPoke(  struct glueCommands *data, int nextToken )
 
 char *craftStrPoke KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdNormal( _craftStrPoke, tokenBuffer );
 	return tokenBuffer;
 }
 
 char *craftChipMaxBlock KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	setStackNum( instance, AvailMem( MEMF_CHIP | MEMF_LARGEST ) );
 	return tokenBuffer;
 }
 
 char *craftFastMaxBlock KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	setStackNum( instance, AvailMem( MEMF_FAST | MEMF_LARGEST ) );
 	return tokenBuffer;
 }
@@ -911,7 +917,7 @@ char *_craftMemCopy(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	unsigned char *addressSource,*addressEnd,*addressDest;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	switch (args)
 	{
@@ -941,7 +947,7 @@ char *_craftMemCopy(  struct glueCommands *data, int nextToken )
 
 char *craftMemCopy KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdNormal( _craftMemCopy, tokenBuffer );
 	return tokenBuffer;
 }
@@ -952,7 +958,7 @@ char *_craftMemType( struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	char *adr;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=1)
 	{
@@ -969,7 +975,7 @@ char *_craftMemType( struct glueCommands *data, int nextToken )
 
 char *craftMemType KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftMemType, tokenBuffer );
 	return tokenBuffer;
 }
@@ -980,9 +986,9 @@ char *_craftMemScramble(  struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
-	printf("args: %d\n",args);
+	dprintf("args: %d\n",args);
 
 	api.dumpStack();
 
@@ -1028,14 +1034,14 @@ char *_craftMemScramble(  struct glueCommands *data, int nextToken )
 
 char *craftMemScramble KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdNormal( _craftMemScramble, tokenBuffer );
 	return tokenBuffer;
 }
 
 char *craftMemUnscramble KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdNormal( _craftMemScramble, tokenBuffer );
 	return tokenBuffer;
 }
@@ -1043,7 +1049,7 @@ char *craftMemUnscramble KITTENS_CMD_ARGS
 
 char *craftDrFileSTR KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError( 22, tokenBuffer );
 	return tokenBuffer;
 }
@@ -1053,7 +1059,7 @@ char *_craftDrPathSTR( struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=1)
 	{
@@ -1113,7 +1119,7 @@ char *_craftDrPathSTR( struct glueCommands *data, int nextToken )
 
 char *craftDrPathSTR KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftDrPathSTR, tokenBuffer );
 	return tokenBuffer;
 }
@@ -1160,11 +1166,11 @@ char *_craftDbFree(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	uint64 ret;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
-	printf("args: %d\n",args);
+	dprintf("args: %d\n",args);
 
 	if (args !=1)
 	{
@@ -1188,7 +1194,7 @@ char *_craftDbFree(  struct glueCommands *data, int nextToken )
 
 char *craftDbFree KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftDbFree, tokenBuffer );
 	return tokenBuffer;
 }
@@ -1199,9 +1205,9 @@ char *_craftDbUsed(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	uint64 ret;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
-	printf("args: %d\n",args);
+	dprintf("args: %d\n",args);
 
 	if (args !=1)
 	{
@@ -1225,7 +1231,7 @@ char *_craftDbUsed(  struct glueCommands *data, int nextToken )
 
 char *craftDbUsed KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftDbUsed, tokenBuffer );
 	return tokenBuffer;
 }
@@ -1236,9 +1242,9 @@ char *_craftDbSize(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	uint64 ret;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
-	printf("args: %d\n",args);
+	dprintf("args: %d\n",args);
 
 	if (args !=1)
 	{
@@ -1262,7 +1268,7 @@ char *_craftDbSize(  struct glueCommands *data, int nextToken )
 
 char *craftDbSize KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftDbSize, tokenBuffer );
 	return tokenBuffer;
 }
@@ -1273,9 +1279,9 @@ char *_craftDiscState(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	struct stringData  *name;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
-	printf("args: %d\n",args);
+	dprintf("args: %d\n",args);
 
 	if (args !=1)
 	{
@@ -1311,7 +1317,7 @@ char *_craftDiscState(  struct glueCommands *data, int nextToken )
 
 char *craftDiscState KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftDiscState, tokenBuffer );
 	return tokenBuffer;
 }
@@ -1322,9 +1328,9 @@ char *_craftDiscTypeSTR(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	struct stringData  *name,*ret;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
-	printf("args: %d\n",args);
+	dprintf("args: %d\n",args);
 
 	if (args !=1)
 	{
@@ -1369,7 +1375,7 @@ char *_craftDiscTypeSTR(  struct glueCommands *data, int nextToken )
 
 char *craftDiscTypeSTR KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftDiscTypeSTR, tokenBuffer );
 	return tokenBuffer;
 }
@@ -1380,9 +1386,9 @@ char *_craftFileProtect( struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	struct ExamineData *fdata = NULL;
 
-	printf("instance -> current_extension: %d\n",instance -> current_extension);
+	dprintf("instance -> current_extension: %d\n",instance -> current_extension);
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -1395,38 +1401,38 @@ char *_craftFileProtect( struct glueCommands *data, int nextToken )
 	else
 	{
 
-printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 		struct stringData *file = getStackString( instance,__stack);
 		if (file)
 		{
 
-printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 			fdata =ExamineObjectTags( EX_StringNameInput, &file -> ptr, TAG_END );
 			if (fdata)
 			{
 
-printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 				if (fdata -> Comment)
 				{
-					printf("%s\n",fdata -> Comment);
+					dprintf("%s\n",fdata -> Comment);
 					struct stringData *comment = toAmosString( fdata -> Comment, strlen( fdata -> Comment ) );
 
-printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-printf("comment - 0x%08x\n",comment);
+dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+dprintf("comment - 0x%08x\n",comment);
 
 					setStackStr( instance, comment ) ;
 				}
 
-printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 				FreeDosObject(DOS_EXAMINEDATA,fdata); 
 				fdata = NULL;
 			}
 
-printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 			return NULL;
 		}
@@ -1438,7 +1444,7 @@ printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 char *craftFileProtect KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftFileProtect, tokenBuffer );
 	return tokenBuffer;
 }
@@ -1449,9 +1455,9 @@ char *_craftFileCommentSTR( struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	struct ExamineData *fdata = NULL;
 
-	printf("instance -> current_extension: %d\n",instance -> current_extension);
+	dprintf("instance -> current_extension: %d\n",instance -> current_extension);
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -1464,24 +1470,24 @@ char *_craftFileCommentSTR( struct glueCommands *data, int nextToken )
 	else
 	{
 
-printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 		struct stringData *file = getStackString( instance,__stack);
 		if (file)
 		{
 
-printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 			fdata =ExamineObjectTags( EX_StringNameInput, &file -> ptr, TAG_END );
 			if (fdata)
 			{
 
-printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 				setStackStr( instance, toAmosString( fdata -> Comment, strlen( fdata -> Comment ) ) ) ;
 				FreeDosObject(DOS_EXAMINEDATA,fdata); 
 				fdata = NULL;
 			}
 
-printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 			return NULL;
 		}
@@ -1493,20 +1499,20 @@ printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 char *craftFileCommentSTR KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftFileCommentSTR, tokenBuffer );
 	return tokenBuffer;
 }
 
 char *craftFileLength KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 char *craftFileType KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
@@ -1516,9 +1522,9 @@ char *_craftSetProtect( struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	printf("instance -> current_extension: %d\n",instance -> current_extension);
+	dprintf("instance -> current_extension: %d\n",instance -> current_extension);
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -1541,7 +1547,7 @@ char *_craftSetProtect( struct glueCommands *data, int nextToken )
 
 char *craftSetProtect KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdNormal( _craftSetProtect, tokenBuffer );
 	return tokenBuffer;
 }
@@ -1551,7 +1557,7 @@ char *_craftSetComment( struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -1574,7 +1580,7 @@ char *_craftSetComment( struct glueCommands *data, int nextToken )
 
 char *craftSetComment KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdNormal( _craftSetComment, tokenBuffer );
 	return tokenBuffer;
 }
@@ -1582,12 +1588,12 @@ char *craftSetComment KITTENS_CMD_ARGS
 
 void start_dir_context(struct context *context, char *path)
 {
-printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
-printf("context %08x\n", context );
+dprintf("context %08x\n", context );
 
-	printf("context -> used_dir_contexts %d\n",context -> used_dir_contexts);
-	printf("path: %s\n",path);
+	dprintf("context -> used_dir_contexts %d\n",context -> used_dir_contexts);
+	dprintf("path: %s\n",path);
 
 	context -> dir_context[ context -> used_dir_contexts ] =  ObtainDirContextTags(
 			EX_StringNameInput, path,
@@ -1606,9 +1612,9 @@ char *_craftDrNameSTR( struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	struct context *context = instance -> extensions_context[ instance -> current_extension ];
 
-	printf("instance -> current_extension: %d\n",instance -> current_extension);
+	dprintf("instance -> current_extension: %d\n",instance -> current_extension);
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -1635,7 +1641,7 @@ char *_craftDrNameSTR( struct glueCommands *data, int nextToken )
 			lock = Lock( ptr, SHARED_LOCK );
 			SetProcWindow(oldRequest);
 
-printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 			if ( ! lock )	// If file / path do not exist should return error.
 			{
@@ -1689,7 +1695,7 @@ printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 		}
 		else 
 		{
-			printf("we ended up here some how\n");
+			dprintf("we ended up here some how\n");
 			api.setError( 22, data -> tokenBuffer );
 		}
 	}
@@ -1701,7 +1707,7 @@ printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 char *craftDrNameSTR KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftDrNameSTR, tokenBuffer );
 	return tokenBuffer;
 }
@@ -1711,7 +1717,7 @@ char *craftDrNextSTR KITTENS_CMD_ARGS
 	struct context *context = instance -> extensions_context[ instance -> current_extension ];
 	unsigned int current_dir_context;
 
-printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (( ! context ) || (context -> used_dir_contexts == 0))
 	{
@@ -1721,8 +1727,8 @@ printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	current_dir_context = context -> used_dir_contexts - 1;
 
-	printf("current_dir_context %08x\n",context -> dir_context[ current_dir_context ]);
-	printf("examineData %08x" , context -> examineData[ current_dir_context ]);
+	dprintf("current_dir_context %08x\n",context -> dir_context[ current_dir_context ]);
+	dprintf("examineData %08x" , context -> examineData[ current_dir_context ]);
 
 	if ( ! context -> dir_context[ current_dir_context ] )  
 	{
@@ -1750,7 +1756,7 @@ char *craftDrCommentSTR KITTENS_CMD_ARGS
 	struct context	*context = (struct context *) instance -> extensions_context[ instance -> current_extension ];
 	STRPTR	Comment;
 
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (context -> used_dir_contexts==0)
 	{
@@ -1768,7 +1774,7 @@ char *craftDrProtect KITTENS_CMD_ARGS
 	struct context	*context = (struct context *) instance -> extensions_context[ instance -> current_extension ];
 	uint32		Protection;
 
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (context -> used_dir_contexts==0)
 	{
@@ -1786,7 +1792,7 @@ char *craftDrLength KITTENS_CMD_ARGS
 	struct context *context = (struct context *) instance -> extensions_context[ instance -> current_extension ];
 	int64            FileSize;
 
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (context -> used_dir_contexts==0)
 	{
@@ -1803,7 +1809,7 @@ char *craftDrLength KITTENS_CMD_ARGS
 	else
 	{
 		setStackNum( instance, (int) FileSize);
-		printf("fileSize %lld\n",FileSize);
+		dprintf("fileSize %lld\n",FileSize);
 	}
 
 	return tokenBuffer;
@@ -1814,7 +1820,7 @@ char *craftDrType KITTENS_CMD_ARGS
 	struct context *context = (struct context *) instance -> extensions_context[ instance -> current_extension ];
 	uint32	Type;
 
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (context -> used_dir_contexts==0)
 	{
@@ -1829,7 +1835,7 @@ char *craftDrType KITTENS_CMD_ARGS
 
 char *craftDrFib KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
@@ -1837,7 +1843,7 @@ char *craftDrFib KITTENS_CMD_ARGS
 char *craftDrForget KITTENS_CMD_ARGS
 {
 	struct context *context = instance -> extensions_context[ instance -> current_extension ];
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (context -> used_dir_contexts)
 	{
@@ -1853,7 +1859,7 @@ char *craftDrForget KITTENS_CMD_ARGS
 
 char *craftDiscError KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
@@ -1863,9 +1869,9 @@ char *_craftSetRed( struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
-	printf("args: %d\n",args);
+	dprintf("args: %d\n",args);
 
 	if (args !=2)
 	{
@@ -1900,7 +1906,7 @@ char *_craftSetRed( struct glueCommands *data, int nextToken )
 
 char *craftSetRed KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdNormal( _craftSetRed, tokenBuffer );
 	return tokenBuffer;
 }
@@ -1911,9 +1917,9 @@ char *_craftPalRed( struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	uint32 v =0;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
-	printf("args: %d\n",args);
+	dprintf("args: %d\n",args);
 
 	if (args !=1)
 	{
@@ -1939,7 +1945,7 @@ char *_craftPalRed( struct glueCommands *data, int nextToken )
 
 char *craftPalRed KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftPalRed, tokenBuffer );
 	return tokenBuffer;
 }
@@ -1949,7 +1955,7 @@ char *_craftSetGreen( struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=2)
 	{
@@ -1984,7 +1990,7 @@ char *_craftSetGreen( struct glueCommands *data, int nextToken )
 
 char *craftSetGreen KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdNormal( _craftSetGreen, tokenBuffer );
 	return tokenBuffer;
 }
@@ -1995,9 +2001,9 @@ char *_craftPalGreen( struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	uint32 v =0;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
-	printf("args: %d\n",args);
+	dprintf("args: %d\n",args);
 
 	if (args !=1)
 	{
@@ -2023,7 +2029,7 @@ char *_craftPalGreen( struct glueCommands *data, int nextToken )
 
 char *craftPalGreen KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftPalGreen, tokenBuffer );
 	return tokenBuffer;
 }
@@ -2033,7 +2039,7 @@ char *_craftSetBlue( struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=2)
 	{
@@ -2068,7 +2074,7 @@ char *_craftSetBlue( struct glueCommands *data, int nextToken )
 
 char *craftSetBlue KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdNormal( _craftSetBlue, tokenBuffer );
 	return tokenBuffer;
 }
@@ -2079,9 +2085,9 @@ char *_craftPalBlue( struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	uint32 v =0;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
-	printf("args: %d\n",args);
+	dprintf("args: %d\n",args);
 
 	if (args !=1)
 	{
@@ -2107,7 +2113,7 @@ char *_craftPalBlue( struct glueCommands *data, int nextToken )
 
 char *craftPalBlue KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftPalBlue, tokenBuffer );
 	return tokenBuffer;
 }
@@ -2117,7 +2123,7 @@ char *_craftPalSpread( struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=2)
 	{
@@ -2173,7 +2179,7 @@ char *_craftPalSpread( struct glueCommands *data, int nextToken )
 
 char *craftPalSpread KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdNormal( _craftPalSpread, tokenBuffer );
 	return tokenBuffer;
 }
@@ -2183,7 +2189,7 @@ char *_craftPalSwap( struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=2)
 	{
@@ -2217,7 +2223,7 @@ char *_craftPalSwap( struct glueCommands *data, int nextToken )
 
 char *craftPalSwap KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdNormal( _craftPalSwap, tokenBuffer );
 	return tokenBuffer;
 }
@@ -2227,7 +2233,7 @@ char *_craftPalCopy( struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=2)
 	{
@@ -2257,7 +2263,7 @@ char *_craftPalCopy( struct glueCommands *data, int nextToken )
 
 char *craftPalCopy KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdNormal( _craftPalCopy, tokenBuffer );
 	return tokenBuffer;
 }
@@ -2268,7 +2274,7 @@ char *_craftReserveAsPalette(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	int bankId,pals,mask;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -2307,7 +2313,7 @@ char *_craftReserveAsPalette(  struct glueCommands *data, int nextToken )
 
 char *craftReserveAsPalette KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdNormal( _craftReserveAsPalette, tokenBuffer );
 	return tokenBuffer;
 }
@@ -2320,7 +2326,7 @@ char *_craftPalCount(  struct glueCommands *data, int nextToken )
 	int _size = 0;
 	struct kittyBank *bank;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -2353,7 +2359,7 @@ char *_craftPalCount(  struct glueCommands *data, int nextToken )
 
 char *craftPalCount KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftPalCount, tokenBuffer );
 	return tokenBuffer;
 }
@@ -2367,7 +2373,7 @@ char *_craftPalToBank(  struct glueCommands *data, int nextToken )
 	struct retroScreen *screen;
 	unsigned char *pal ;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -2422,7 +2428,7 @@ char *_craftPalToBank(  struct glueCommands *data, int nextToken )
 
 char *craftPalToBank KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdNormal( _craftPalToBank, tokenBuffer );
 	return tokenBuffer;
 }
@@ -2436,7 +2442,7 @@ char *_craftPalFromBank(  struct glueCommands *data, int nextToken )
 	struct retroScreen *screen;
 	unsigned char *pal ;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	switch (args)
 	{
@@ -2495,7 +2501,7 @@ char *_craftPalFromBank(  struct glueCommands *data, int nextToken )
 
 char *craftPalFromBank KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdNormal( _craftPalFromBank, tokenBuffer );
 	return tokenBuffer;
 }
@@ -2507,10 +2513,10 @@ char *_craftPalSwapBank(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	int bankNr=0,paletteNr=0,mask=0;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 
-	printf("args: %d\n",args);
+	dprintf("args: %d\n",args);
 
 	switch (args)
 	{
@@ -2548,8 +2554,8 @@ char *_craftPalSwapBank(  struct glueCommands *data, int nextToken )
 		bank = api.findBank( bankNr );
 		screen = instance -> screens[ instance -> current_screen ];
 
-		printf("bank: %08x\n",bank);
-		printf("screen: %08x\n",screen);
+		dprintf("bank: %08x\n",bank);
+		dprintf("screen: %08x\n",screen);
 
 		if ((bank)&&(screen)&&(paletteNr>-1))
 		{
@@ -2587,7 +2593,7 @@ char *_craftPalSwapBank(  struct glueCommands *data, int nextToken )
 
 char *craftPalSwapBank KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdNormal( _craftPalSwapBank, tokenBuffer );
 	return tokenBuffer;
 }
@@ -2598,7 +2604,7 @@ char *_craftSetBankColour(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	int bankNr=0,paletteNr=0,colorNr=0,value=0;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	switch (args)
 	{
@@ -2648,7 +2654,7 @@ char *_craftSetBankColour(  struct glueCommands *data, int nextToken )
 
 char *craftSetBankColour KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdNormal( _craftSetBankColour, tokenBuffer );
 	return tokenBuffer;
 }
@@ -2659,9 +2665,9 @@ char *_craftBankColour(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	int bankNr=0,paletteNr=0,colorNr=0;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
-	printf("args: %d\n",args);
+	dprintf("args: %d\n",args);
 
 	switch (args)
 	{
@@ -2701,7 +2707,7 @@ char *_craftBankColour(  struct glueCommands *data, int nextToken )
 
 char *craftBankColour KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftBankColour, tokenBuffer );
 	return tokenBuffer;
 }
@@ -2712,9 +2718,9 @@ char *_craftDelBankColour(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	int bankNr=0,paletteNr=0,colorNr=0;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
-	printf("args: %d\n",args);
+	dprintf("args: %d\n",args);
 
 	switch (args)
 	{
@@ -2754,378 +2760,375 @@ char *_craftDelBankColour(  struct glueCommands *data, int nextToken )
 
 char *craftDelBankColour KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdNormal( _craftDelBankColour, tokenBuffer );
 	return tokenBuffer;
 }
 
 char *craftTrExec KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrError KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrReset KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrAngle KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrGetAngle KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrLeft KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrRight KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrTowards KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrForward KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrForw KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrBack KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrDistance KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrPenUp KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrPenDown KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrPenState KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrMoveRel KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrMove KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrDrawRel KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrDraw KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrXPos KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrYPos KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrProportions KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrSetHome KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrHome KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrXHome KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrYHome KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrRememberX KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrRememberY KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrRememberA KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrMemorizeX KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrMemorizeY KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrMemorizeA KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftTrBase KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftFrReset KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftFrXPosition KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftFrYPosition KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftFrPosition KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftFrXStep KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftFrYStep KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftFrStep KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftFrColour KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftFrGetColour KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftFrWindow KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftFrScanAll KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftFrScan KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftFrJulia KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftFrMandelbrot KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftOpenWorkbench KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	return tokenBuffer;
 }
 
 char *craftWbToBack KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	return tokenBuffer;
 }
 
 char *craftWbToFront KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	return tokenBuffer;
 }
 
 char *craftCliExecute KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	stackCmdNormal( _craftCliExecute, tokenBuffer );
 	return tokenBuffer;
 }
 
 char *craftCliPrint KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	stackCmdNormal( _craftCliPrint, tokenBuffer );
 	return tokenBuffer;
 }
 
 char *craftGuruMeditation KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
@@ -3137,7 +3140,7 @@ char *_craftGuruAlert( struct glueCommands *data, int nextToken )
 	uint32 ret;
 	struct stringData *argStr[5];
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	switch (args)
 	{
@@ -3182,29 +3185,29 @@ char *_craftGuruAlert( struct glueCommands *data, int nextToken )
 
 char *craftGuruAlert KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftGuruAlert, tokenBuffer );
 	return tokenBuffer;
 }
 
 char *craftMultiOn KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftMultiOff KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftSetAmosPri KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	stackCmdNormal( _craftSetAmosPri, tokenBuffer );
 	return tokenBuffer;
 }
 
@@ -3217,14 +3220,14 @@ char *craftAmosPri KITTENS_CMD_ARGS
 
 char *craftWbDefPrefs KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftWbPrefs KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
@@ -3237,7 +3240,7 @@ char *_craftSysRequest( struct glueCommands *data, int nextToken )
 	struct stringData *argStr[6];
 	struct stringData *ok,*cancel;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	switch (args)
 	{
@@ -3294,49 +3297,49 @@ char *_craftSysRequest( struct glueCommands *data, int nextToken )
 
 char *craftSysRequest KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftSysRequest, tokenBuffer );
 	return tokenBuffer;
 }
 
 char *craftHardReset KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftWarmReset KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftHwMouseKey KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftYBeam KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftBeamWait KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftGrInk KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	struct retroScreen *screen = instance -> screens[ instance -> current_screen ];
 
@@ -3351,7 +3354,7 @@ char *craftGrInk KITTENS_CMD_ARGS
 
 char *craftGrBack KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	struct retroScreen *screen = instance -> screens[ instance -> current_screen ];
 
@@ -3366,7 +3369,7 @@ char *craftGrBack KITTENS_CMD_ARGS
 
 char *craftGrBorder KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	struct retroScreen *screen = instance -> screens[ instance -> current_screen ];
 
@@ -3381,24 +3384,22 @@ char *craftGrBorder KITTENS_CMD_ARGS
 
 char *craftGrCentre KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftAmosBase KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
 
 char *craftCraftVersion KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	setStackNum( instance, VERSION * 10 + REVISION );
-
 	return tokenBuffer;
 }
 
@@ -3418,7 +3419,7 @@ char *craftAmosPro KITTENS_CMD_ARGS
 
 char *craftSetWbPrefs KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	api.setError(22, tokenBuffer);
 	return tokenBuffer;
 }
@@ -3429,7 +3430,7 @@ char *_craftB_swap( struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	uint32 ret;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=1)
 	{
@@ -3448,7 +3449,7 @@ char *_craftB_swap( struct glueCommands *data, int nextToken )
 
 char *craftB_swap KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftB_swap, tokenBuffer );
 	return tokenBuffer;
 }
@@ -3459,7 +3460,7 @@ char *_craftW_swap( struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	uint32 ret;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=1)
 	{
@@ -3478,7 +3479,7 @@ char *_craftW_swap( struct glueCommands *data, int nextToken )
 
 char *craftW_swap KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftW_swap, tokenBuffer );
 	return tokenBuffer;
 }
@@ -3490,7 +3491,7 @@ char *_craftL_swap( struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	uint32 ret;
 
-	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=1)
 	{
@@ -3506,7 +3507,7 @@ char *_craftL_swap( struct glueCommands *data, int nextToken )
 
 char *craftL_swap KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdParm( _craftL_swap, tokenBuffer );
 	return tokenBuffer;
 }
