@@ -1,3 +1,20 @@
+# Info
+
+Documentation for Kitty Craft Extensions commands.
+
+Commands listed as 
+**bold**
+are commands that are implemented.
+
+**italic**
+are commands started on.
+
+command without no description, are not implemented.
+
+At bottom of the list you will find non supported commands.
+
+# List of commands
+
 **s$=Up Case$(s$)**
  
     Convert to uppercase
@@ -484,8 +501,11 @@ Fr Julia n,n,n
  
 Fr Mandelbrot n 
  
-Open Workbench  
- 
+**Open Workbench**
+
+    Amos Kittens will never close Workbench to save memory, 
+    so this command should not do anything.
+
 Wb To Back  
  
 Wb To Front  
@@ -546,15 +566,7 @@ Set Wb Prefs n,n
     (Your are allowed on Amos kittens to hack the buttons using “|” symbol, 
         this will inserts more buttons.)
 
-Hard Reset  
- 
-Warm Reset  
- 
 n=Hw Mouse Key  
- 
-n=Y Beam  
- 
-Beam Wait n 
  
 **n=Gr Ink**
 
@@ -569,9 +581,7 @@ Beam Wait n
     Returns ink3
 
 Gr Centre n,s$ 
- 
-n=Amos Base  
- 
+  
 **n=Craft Version**
 
     Returns verson of the kittycraft extention / library version.
@@ -600,3 +610,26 @@ n=Cli Here
  
 n=Amos Pro  
 
+# The following commands are not supported.
+
+n=Amos Base  
+
+    Its not legal to poke into Amos Kitty Base, as not the same as Amos Base.
+
+Hard Reset  
+ 
+    Technically possible, but do we really want to allow this?
+
+Warm Reset  
+
+    Technically possible, but do we really want to allow this?
+
+n=Y Beam  
+
+    Rendering engine is technically not in Amos Kittens, its in retroMode,
+    rendering position is not exposed.
+
+Beam Wait n
+
+    Rendering engine is technically not in Amos Kittens, its in retroMode,
+    rendering position is not exposed.
