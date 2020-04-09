@@ -541,10 +541,22 @@ Guru Meditation n,n
 
     Command returns mouse button pressed.
  
-Multi On
+**Multi On**
+
+    Enable multitasking, calls function exec.library/permit()
  
-Multi Off
- 
+**Multi Off**
+
+    Disable multitasking, executes function exec.library/forbid()
+
+    Do not abuse this command, on AmigaOS4.1 the mouse, keyboard, audio needs multitasking, disabling multitasking for a long time course bad sound, keyboard / mouse locking up, and other issues, 
+
+    If you need safe atomic protection, look at the OS4.1 SDK in the folder. 
+    “SDK:Documentation/Autodocs/exec.h”, See functions MutexObtain() and MutexRelease().
+
+    Only when it written you most disable multitasking, should you disable multitasking,
+    and when you keep the multitasking disabled as short as possible.
+
 **Set Amos Pri n**
 
     This command sets task pri of Amos Kittens.
