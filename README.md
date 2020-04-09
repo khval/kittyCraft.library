@@ -5,6 +5,8 @@ this is a reimplemented using documentations, and by trial and error, the aim is
 
 My copyright / software license only extends to work on KittyCraft.library, I’m not the original author of the “AmosPro craft extension”, and I clime no copyright to the original source code, or binary files, nor do I clime any right to original graphics / designs. There these files are not included with this package. And should not be distributed with this package.
 
+The license chosen, is MIT this so people can contribute to the extension, as well as bundle it with commercial games as binary or as source code. Obviously there is no warranty, and I take no responsibility for any bugs or defects.
+
 **work in porgress.**
 
 Only the commands that have a description is implemented.
