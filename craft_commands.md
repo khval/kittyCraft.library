@@ -567,11 +567,11 @@ Multi Off
 
     Display system requestor 
 
-    S1$ to S5$ as text lines in the requestor.
+    S1$ to S5$ is text lines in the requestor.
     Ok$ is OK bottom, returns true.
     Cancel$ is Cancel button, returns false.
     (Your are allowed on Amos kittens to hack the buttons using “|” symbol, 
-        this will inserts more buttons.)
+        this will insert more buttons.)
 
 n=Hw Mouse Key  
  
@@ -638,14 +638,14 @@ Wb Prefs [address],[length]
 Set Wb Prefs n,n,n 
  
     Prefs files are not backwards compatible, not vice to peek and poke into systems files.
-    Until AmigaOS adapts JSON or XML prefs or provide a standard software API, we should do this.
+    Until AmigaOS adapts JSON or XML prefs or provide a standard software API, we should not do this.
 
     Command will return error if executed.
 
 Set Wb Prefs n,n 
 
     Prefs files are not backwards compatible, not vice to peek and poke into systems files.
-    Until AmigaOS adapts JSON or XML prefs or provide a standard software API, we should do this.
+    Until AmigaOS adapts JSON or XML prefs or provide a standard software API, we should not do this.
 
     Command will return error if executed.
 
@@ -654,20 +654,30 @@ n=Amos Base
     Its not legal to poke into Amos Kitty Base, 
     as its not the same as Amos Base.
 
+    Command will return error if executed.
+
 Hard Reset  
  
     Technically possible, but do we really want to allow this?
 
+    Command will return error if executed.
+
 Warm Reset  
 
     Technically possible, but do we really want to allow this?
+
+    Command will return error if executed.
 
 n=Y Beam  
 
     Rendering engine is technically not in Amos Kittens, its in retroMode,
     rendering position is not exposed.
 
+    Command will return error if executed.
+
 Beam Wait n
 
     Rendering engine is technically not in Amos Kittens, its in retroMode,
     rendering position is not exposed.
+
+    Command will return error if executed.
