@@ -3112,12 +3112,82 @@ char *craftWbToFront KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftCliExecute( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	switch (args)
+	{
+		case 1:
+			{
+				struct stringData  *text = getStackString( instance,__stack);
+				if (text) 
+				{
+					BPTR input;
+					char pipeName[30];
+
+					sprintf(pipeName,"PIPE:AmosKittens%08x",FindTask(NULL));
+
+					input = Open(pipeName, MODE_NEWFILE);
+					if (input)
+					{
+						FPuts( input, &text -> ptr);
+						Close(input);
+					}
+
+					input = Open(pipeName, MODE_OLDFILE);
+					if (input)
+					{
+						int32 error = SystemTags("c:newshell", 
+							SYS_Input, input,
+							SYS_ExecuteInputStream, TRUE,
+							TAG_END );
+						Close(input);
+					}
+				}
+			}
+			break;
+		default:
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+	return NULL;
+}
+
 char *craftCliExecute KITTENS_CMD_ARGS
 {
 	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 	stackCmdNormal( _craftCliExecute, tokenBuffer );
 	return tokenBuffer;
 }
+
+char *_craftCliPrint( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	switch (args)
+	{
+		case 1:
+			{
+				struct stringData  *text = getStackString( instance,__stack);
+				if (text) printf("%s\n", &text -> ptr);
+			}
+			break;
+		default:
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+	return NULL;
+}
+
 
 char *craftCliPrint KITTENS_CMD_ARGS
 {
@@ -3204,6 +3274,36 @@ char *craftMultiOff KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftSetAmosPri( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	struct Task *task;
+	uint32 pri;
+
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	switch (args)
+	{
+		case 1:
+			pri = getStackNum( instance,__stack);
+			break;
+		default:
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+	task = FindTask(NULL);
+	if (task)
+	{
+		SetTaskPri(task,pri);
+	}
+
+	return NULL;
+}
+
+
 char *craftSetAmosPri KITTENS_CMD_ARGS
 {
 	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
@@ -3213,8 +3313,17 @@ char *craftSetAmosPri KITTENS_CMD_ARGS
 
 char *craftAmosPri KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	struct Task *task;
+
+	task = FindTask(NULL);
+	if (task)
+	{	
+		int old = SetTaskPri( task, 0);
+		setStackNum( instance, old  );
+		SetTaskPri( task, old);
+	}
+
 	return tokenBuffer;
 }
 
@@ -3405,15 +3514,15 @@ char *craftCraftVersion KITTENS_CMD_ARGS
 
 char *craftCliHere KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	setStackNum( instance, ~0 );
 	return tokenBuffer;
 }
 
 char *craftAmosPro KITTENS_CMD_ARGS
 {
-	printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	setStackNum( instance, ~0 );
 	return tokenBuffer;
 }
 
