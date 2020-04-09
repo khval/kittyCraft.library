@@ -3262,15 +3262,28 @@ char *craftGuruAlert KITTENS_CMD_ARGS
 
 char *craftMultiOn KITTENS_CMD_ARGS
 {
+	struct context *context = instance -> extensions_context[ instance -> current_extension ];
+
 	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+
+	if (context -> multiOffCount )
+	{
+		context -> multiOffCount --;
+		if (context -> multiOffCount == 0) Permit();
+	}
+
 	return tokenBuffer;
 }
 
 char *craftMultiOff KITTENS_CMD_ARGS
 {
+	struct context *context = instance -> extensions_context[ instance -> current_extension ];
+
 	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+
+	if (context -> multiOffCount == 0) Forbid();
+	context -> multiOffCount ++;
+
 	return tokenBuffer;
 }
 
