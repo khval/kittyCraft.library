@@ -17,7 +17,7 @@ RM     = delete
 
 # Change these as required
 OPTIMIZE = -O3
-DEBUG    = # -gstabs -DDEBUG
+DEBUG    = -Ddebug
 CFLAGS   = -Wall $(OPTIMIZE) $(DEBUG)
 
 INC = -I/SDK/include/AmosKittens -I../ -I./
@@ -57,7 +57,7 @@ $(TARGET): $(OBJS)
 	$(CC) $(LINK) -nostartfiles -o $(TARGET) $(OBJS) $(LIBS)
 
 %.o:		%.c 
-	gcc  -Wall -O3  $(INC) -c  -D__USE_INLINE__ -D__no_stdlib__ $(@:.o=.c) -o $@
+	gcc  -Wall -O3  $(INC) $(DEBUG) -c  -D__USE_INLINE__ -D__no_stdlib__ $(@:.o=.c) -o $@
 
 init.o:		init.c 
 	gcc  -Wall -O3  $(INC) -c  $(@:.o=.c) -o $@
