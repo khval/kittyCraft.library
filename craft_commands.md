@@ -472,26 +472,34 @@ n=Fr X Position
  
 n=Fr Y Position  
  
-Fr Position n,n 
+Fr Position [x],[y] 
  
+    set x,y pos.
+
 n=Fr X Step  
  
 n=Fr Y Step  
  
-Fr Step n,n 
+Fr Step [x step],[y step] 
  
-Fr Step n 
+Fr Step [step]
  
 Fr Colour n,n 
  
 n=Fr Get Colour(n)
  
-Fr Window n,n,n,n,n 
- 
-Fr Window n,n,n,n 
- 
-Fr Window n 
- 
+Fr Window [screen] 
+
+    Set the draw aria for fractal, on the [screen] defined.
+
+Fr Window [x],[y],[width],[height]
+
+    Set the draw aria for fractal on current screen.
+
+Fr Window [screen],[x],[y],[width],[height] 
+
+    Set the draw aria for fractal, it also defines also the screens its rendered on.
+
 Fr Scan All  
  
 Fr Scan n 
@@ -500,8 +508,11 @@ Fr Scan n,n
  
 Fr Julia n,n,n 
  
-Fr Mandelbrot n 
+Fr Mandelbrot [iterations]
  
+    Render a Mandelbrot in the fractal window defined.
+    [Iterations] is max number of times to loop on etch max, its also max color value.
+
 **Open Workbench**
 
     Amos Kittens will never close Workbench to save memory, 
