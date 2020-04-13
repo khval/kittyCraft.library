@@ -49,6 +49,7 @@ extern int request( char *title, int nargs, struct stringData **args,
 				ULONG image );
 
 #ifdef debug
+	#warning compiling with debug 
 	#define dprintf printf
 #else
 	#define dprintf(fmt,...)
@@ -3003,45 +3004,161 @@ char *craftFrReset KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftFrXPosition( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	struct context *context = instance -> extensions_context[ instance -> current_extension ];
+	int args = instance_stack - data->stack +1;
+
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	if (args !=1)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+
+	context -> fractal.x = getStackNum( instance,__stack );
+	return NULL;
+}
+
 char *craftFrXPosition KITTENS_CMD_ARGS
 {
 	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftFrXPosition, tokenBuffer );
 	return tokenBuffer;
+}
+
+char *_craftFrYPosition( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	struct context *context = instance -> extensions_context[ instance -> current_extension ];
+	int args = instance_stack - data->stack +1;
+
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	if (args !=1)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+
+	context -> fractal.y = getStackNum( instance,__stack );
+	return NULL;
 }
 
 char *craftFrYPosition KITTENS_CMD_ARGS
 {
 	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftFrYPosition, tokenBuffer );
 	return tokenBuffer;
+}
+
+char *_craftFrPosition( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	struct context *context = instance -> extensions_context[ instance -> current_extension ];
+	int args = instance_stack - data->stack +1;
+
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	if (args !=2)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+
+	context -> fractal.x = getStackNum( instance,__stack -1);
+	context -> fractal.y = getStackNum( instance,__stack );
+	popStack( instance, instance_stack - data->stack );
+	return NULL;
 }
 
 char *craftFrPosition KITTENS_CMD_ARGS
 {
 	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftFrPosition, tokenBuffer );
 	return tokenBuffer;
+}
+
+char *_craftFrXStep( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	struct context *context = instance -> extensions_context[ instance -> current_extension ];
+	int args = instance_stack - data->stack +1;
+
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	if (args !=1)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+
+	context -> fractal.step = (uint32) getStackNum( instance,__stack );
+	return NULL;
 }
 
 char *craftFrXStep KITTENS_CMD_ARGS
 {
 	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftFrXStep, tokenBuffer );
 	return tokenBuffer;
+}
+
+char *_craftFrYStep( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	struct context *context = instance -> extensions_context[ instance -> current_extension ];
+	int args = instance_stack - data->stack +1;
+
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	if (args !=1)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+
+	context -> fractal.step = (uint32) getStackNum( instance,__stack );
+	return NULL;
 }
 
 char *craftFrYStep KITTENS_CMD_ARGS
 {
 	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftFrYStep, tokenBuffer );
 	return tokenBuffer;
+}
+
+char *_craftFrStep( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	struct context *context = instance -> extensions_context[ instance -> current_extension ];
+	int args = instance_stack - data->stack +1;
+
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	if (args !=1)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+
+	context -> fractal.step = (uint32) getStackNum( instance,__stack );
+	return NULL;
 }
 
 char *craftFrStep KITTENS_CMD_ARGS
 {
 	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftFrStep, tokenBuffer );
 	return tokenBuffer;
 }
 
@@ -3059,10 +3176,53 @@ char *craftFrGetColour KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftFrWindow(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	struct context *context = instance -> extensions_context[ instance -> current_extension ];
+	int args = instance_stack - data->stack +1;
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	switch (args)
+	{
+		case 1:
+			context -> fractal.window.screen = (unsigned char *) getStackNum( instance,__stack);
+			{
+				struct retroScreen *screen = instance->screens[ context -> fractal.window.screen ];
+
+				if (screen)
+				{
+					context -> fractal.window.x = 0;
+					context -> fractal.window.y = 0;
+					context -> fractal.window.width = screen -> realWidth;
+					context -> fractal.window.height = screen -> realHeight;
+				}
+			}
+			return NULL;
+
+		case 5:
+			context -> fractal.window.screen = getStackNum( instance,__stack -4);
+			context -> fractal.window.x = getStackNum( instance,__stack -3);
+			context -> fractal.window.y = getStackNum( instance,__stack -2);
+			context -> fractal.window.width = getStackNum( instance,__stack -1);
+			context -> fractal.window.height = getStackNum( instance,__stack);
+			break;
+
+		default:
+
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+	popStack( instance, instance_stack - data->stack );
+	return NULL;
+}
+
 char *craftFrWindow KITTENS_CMD_ARGS
 {
 	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftFrWindow, tokenBuffer );
 	return tokenBuffer;
 }
 
@@ -3087,10 +3247,43 @@ char *craftFrJulia KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+extern void mandelbrot(  struct retroScreen *screen , int iterations, struct fractal *f);
+
+char *_craftFrMandelbrot(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	struct context *context = instance -> extensions_context[ instance -> current_extension ];
+	int args = instance_stack - data->stack +1;
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	switch (args)
+	{
+		case 1:
+
+			{
+				int iterations = getStackNum( instance,__stack); 
+				struct retroScreen *screen = instance->screens[ context -> fractal.window.screen ];
+
+				mandelbrot( screen, iterations, &context -> fractal );
+			}
+
+			return NULL;
+
+		default:
+
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+	popStack( instance, instance_stack - data->stack );
+	return NULL;
+}
+
 char *craftFrMandelbrot KITTENS_CMD_ARGS
 {
 	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftFrMandelbrot, tokenBuffer );
 	return tokenBuffer;
 }
 
