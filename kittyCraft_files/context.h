@@ -14,9 +14,12 @@ struct fractal
 {
 	int x;
 	int y;
-	int step;
+	int xstep;
+	int ystep;
 	int cr;		// for julia
 	int ci;		// for julia
+	int start;
+	int height;
 	int iterations;
 	struct fwindow window;
 };

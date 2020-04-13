@@ -33,8 +33,6 @@ void mandelbrot(  struct retroScreen *screen , int iterations, struct fractal *f
 	int x,y;
 	int k;
 
-//	kt =;
-
 	wix = f -> window.x;
 	wiy = f -> window.y;
 	wiw = f -> window.width - f->window.x;
@@ -53,12 +51,21 @@ void mandelbrot(  struct retroScreen *screen , int iterations, struct fractal *f
 	double tx,ty;
 	double r;
 
-//	xmin *=scalex;
-//	xmax *=scalex;
+	double dx = (xmax - xmin) ; 
+	double dy = (ymax - ymin) ;
 
+	printf("%0.3lf %0.3lf\n",dx,dy);
 
-	double dx = (xmax - xmin) / wiw; 
-	double dy = (ymax - ymin) / wih;
+	xmin = (double) f->x / 10000.0f;
+	ymin = -(double) f->y / 10000.0f;
+
+	printf("%0.3lf %0.3lf\n",xmin,ymin);
+
+	dx = dx * (double) f -> xstep  / 100.0f;
+	dy = dy * (double) f -> ystep / 100.0f;
+
+	dx /= wiw;
+	dy /=wih;
 
 	unsigned char *mem = screen -> Memory[ screen -> double_buffer_draw_frame ];
 

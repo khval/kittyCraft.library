@@ -481,9 +481,13 @@ n=Fr X Step
 n=Fr Y Step  
  
 Fr Step [x step],[y step] 
+
+    scale x and scale y
  
 Fr Step [step]
- 
+
+    This is used to zoom, step=100 is 100%, step=50 is 50%..
+
 Fr Colour n,n 
  
 n=Fr Get Colour(n)
@@ -500,11 +504,13 @@ Fr Window [screen],[x],[y],[width],[height]
 
     Set the draw aria for fractal, it also defines also the screens its rendered on.
 
+    Argument should are optional, if not set screen dimentions are used.
+
 Fr Scan All  
  
-Fr Scan n 
+Fr Scan [startline]
  
-Fr Scan n,n 
+Fr Scan [startline],[height] 
  
 Fr Julia n,n,n 
  

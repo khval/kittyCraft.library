@@ -3004,55 +3004,19 @@ char *craftFrReset KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
-char *_craftFrXPosition( struct glueCommands *data, int nextToken )
-{
-	struct KittyInstance *instance = data -> instance;
-	struct context *context = instance -> extensions_context[ instance -> current_extension ];
-	int args = instance_stack - data->stack +1;
-
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-
-	if (args !=1)
-	{
-		popStack( instance, instance_stack - data->stack );
-		api.setError(22, data -> tokenBuffer);
-		return NULL;
-	}
-
-	context -> fractal.x = getStackNum( instance,__stack );
-	return NULL;
-}
-
 char *craftFrXPosition KITTENS_CMD_ARGS
 {
-	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	stackCmdNormal( _craftFrXPosition, tokenBuffer );
-	return tokenBuffer;
-}
-
-char *_craftFrYPosition( struct glueCommands *data, int nextToken )
-{
-	struct KittyInstance *instance = data -> instance;
 	struct context *context = instance -> extensions_context[ instance -> current_extension ];
-	int args = instance_stack - data->stack +1;
-
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-
-	if (args !=1)
-	{
-		popStack( instance, instance_stack - data->stack );
-		api.setError(22, data -> tokenBuffer);
-		return NULL;
-	}
-
-	context -> fractal.y = getStackNum( instance,__stack );
-	return NULL;
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	setStackNum( instance, context -> fractal.x );
+	return tokenBuffer;
 }
 
 char *craftFrYPosition KITTENS_CMD_ARGS
 {
+	struct context *context = instance -> extensions_context[ instance -> current_extension ];
 	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	stackCmdNormal( _craftFrYPosition, tokenBuffer );
+	setStackNum( instance, context -> fractal.y );
 	return tokenBuffer;
 }
 
@@ -3084,55 +3048,19 @@ char *craftFrPosition KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
-char *_craftFrXStep( struct glueCommands *data, int nextToken )
-{
-	struct KittyInstance *instance = data -> instance;
-	struct context *context = instance -> extensions_context[ instance -> current_extension ];
-	int args = instance_stack - data->stack +1;
-
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-
-	if (args !=1)
-	{
-		popStack( instance, instance_stack - data->stack );
-		api.setError(22, data -> tokenBuffer);
-		return NULL;
-	}
-
-	context -> fractal.step = (uint32) getStackNum( instance,__stack );
-	return NULL;
-}
-
 char *craftFrXStep KITTENS_CMD_ARGS
 {
-	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	stackCmdNormal( _craftFrXStep, tokenBuffer );
-	return tokenBuffer;
-}
-
-char *_craftFrYStep( struct glueCommands *data, int nextToken )
-{
-	struct KittyInstance *instance = data -> instance;
 	struct context *context = instance -> extensions_context[ instance -> current_extension ];
-	int args = instance_stack - data->stack +1;
-
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-
-	if (args !=1)
-	{
-		popStack( instance, instance_stack - data->stack );
-		api.setError(22, data -> tokenBuffer);
-		return NULL;
-	}
-
-	context -> fractal.step = (uint32) getStackNum( instance,__stack );
-	return NULL;
+	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	setStackNum( instance, context -> fractal.xstep );
+	return tokenBuffer;
 }
 
 char *craftFrYStep KITTENS_CMD_ARGS
 {
+	struct context *context = instance -> extensions_context[ instance -> current_extension ];
 	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	stackCmdNormal( _craftFrYStep, tokenBuffer );
+	setStackNum( instance, context -> fractal.ystep );
 	return tokenBuffer;
 }
 
@@ -3144,14 +3072,23 @@ char *_craftFrStep( struct glueCommands *data, int nextToken )
 
 	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
-	if (args !=1)
+	switch (args)
 	{
-		popStack( instance, instance_stack - data->stack );
-		api.setError(22, data -> tokenBuffer);
-		return NULL;
+		case 1:
+				context -> fractal.xstep = (uint32) getStackNum( instance,__stack );
+				context -> fractal.ystep = context -> fractal.ystep;
+				popStack( instance, instance_stack - data->stack );
+				break;
+		case 2:
+				context -> fractal.xstep = (uint32) getStackNum( instance,__stack-1 );
+				context -> fractal.ystep = (uint32) getStackNum( instance,__stack );
+				break;
+		default:
+				popStack( instance, instance_stack - data->stack );
+				api.setError(22, data -> tokenBuffer);
+				return NULL;
 	}
 
-	context -> fractal.step = (uint32) getStackNum( instance,__stack );
 	return NULL;
 }
 
@@ -3186,7 +3123,7 @@ char *_craftFrWindow(  struct glueCommands *data, int nextToken )
 	switch (args)
 	{
 		case 1:
-			context -> fractal.window.screen = (unsigned char *) getStackNum( instance,__stack);
+			context -> fractal.window.screen = getStackNum( instance,__stack);
 			{
 				struct retroScreen *screen = instance->screens[ context -> fractal.window.screen ];
 
@@ -3233,10 +3170,38 @@ char *craftFrScanAll KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftFrScan(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	struct context *context = instance -> extensions_context[ instance -> current_extension ];
+	int args = instance_stack - data->stack +1;
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	switch (args)
+	{
+		case 1:
+			context -> fractal.start = getStackNum( instance,__stack);
+			return NULL;
+
+		case 5:
+			context -> fractal.start = getStackNum( instance,__stack -1);
+			context -> fractal.height = getStackNum( instance,__stack);
+			break;
+
+		default:
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+	popStack( instance, instance_stack - data->stack );
+	return NULL;
+}
+
 char *craftFrScan KITTENS_CMD_ARGS
 {
 	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftFrScan, tokenBuffer );
 	return tokenBuffer;
 }
 
@@ -3339,6 +3304,8 @@ char *_craftCliExecute( struct glueCommands *data, int nextToken )
 							SYS_ExecuteInputStream, TRUE,
 							TAG_END );
 						Close(input);
+
+						error = error;
 					}
 				}
 			}

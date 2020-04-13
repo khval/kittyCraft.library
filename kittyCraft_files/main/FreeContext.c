@@ -62,6 +62,13 @@ void _kittycraft_FreeContext(struct kittyCraftIFace *Self,  struct context * con
 
 	if (context)
 	{
+		if (context -> multiOffCount)
+		{
+			printf("Craft had hanging Forbid!\n");
+			Permit();
+			context -> multiOffCount =0;
+		}
+
 		printf("context -> used_dir_contexts: %d\n", (unsigned int) context -> used_dir_contexts);
 
 		for ( n=0; n < context -> used_dir_contexts; n++ )
