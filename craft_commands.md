@@ -468,23 +468,31 @@ n=Tr Base
  
 Fr Reset  
 
-n=Fr X Position  
+**n=Fr X Position**
  
-n=Fr Y Position  
- 
-Fr Position [x],[y] 
- 
-    set x,y pos.
+    Returns x position
 
-n=Fr X Step  
+**n=Fr Y Position**
+
+    Returns y position
  
-n=Fr Y Step  
+**Fr Position [x],[y]**
  
-Fr Step [x step],[y step] 
+    Set x,y position inside the fractal.
+
+**n=Fr X Step**
+
+    Returns x step
+ 
+**n=Fr Y Step**
+
+    Returns y step
+ 
+**Fr Step [x step],[y step]**
 
     scale x and scale y
  
-Fr Step [step]
+**Fr Step [step]**
 
     This is used to zoom, step=100 is 100%, step=50 is 50%..
 
@@ -492,32 +500,44 @@ Fr Colour n,n
  
 n=Fr Get Colour(n)
  
-Fr Window [screen] 
+**Fr Window [screen]**
 
     Set the draw aria for fractal, on the [screen] defined.
 
-Fr Window [x],[y],[width],[height]
+**Fr Window [x],[y],[width],[height]**
 
     Set the draw aria for fractal on current screen.
 
-Fr Window [screen],[x],[y],[width],[height] 
+**Fr Window [screen],[x],[y],[width],[height]**
 
     Set the draw aria for fractal, it also defines also the screens its rendered on.
 
     Argument should are optional, if not set screen dimentions are used.
 
 Fr Scan All  
+
+    Render all fractal lines
  
 Fr Scan [startline]
+
+    First line to start to render
  
 Fr Scan [startline],[height] 
+
+    First line to start to render, and number of lines to render.
+
+Fr Julia [cr],[cy],[Iterations]
+    
+    [cr] ??
+
+    [cy] ??
+
+    [Iterations] is max number of times to loop per pixel, its also max color value.
  
-Fr Julia n,n,n 
- 
-Fr Mandelbrot [iterations]
+**Fr Mandelbrot [iterations]**
  
     Render a Mandelbrot in the fractal window defined.
-    [Iterations] is max number of times to loop on etch max, its also max color value.
+    [Iterations] is max number of times to loop per pixel, its also max color value.
 
 **Open Workbench**
 
