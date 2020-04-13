@@ -45,7 +45,8 @@ main_SRCS = main/Obtain.c main/Release.c main/makeLookupTable.c \
 	ext_craft.c \
 	alart.c \
 	request.c  \
-	mandelbrot.c 
+	mandelbrot.c \
+	julia.c
 
 # -------------------------------------------------------------
 # Nothing should need changing below this line

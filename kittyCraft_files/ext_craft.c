@@ -3215,10 +3215,48 @@ char *craftFrScan KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+extern void julia(  struct retroScreen *screen, int _cr, int _cy, int iterations, struct fractal *f);
+
+char *_craftFrJulia(  struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	struct context *context = instance -> extensions_context[ instance -> current_extension ];
+	int args = instance_stack - data->stack +1;
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	switch (args)
+	{
+		case 3:
+
+			{
+				int cr = getStackNum( instance,__stack-2); 
+				int cy = getStackNum( instance,__stack-1); 
+				int iterations = getStackNum( instance,__stack); 
+
+				struct retroScreen *screen = instance->screens[ context -> fractal.window.screen ];
+
+				julia( screen, cr, cy, iterations, &context -> fractal );
+			}
+
+			popStack( instance, instance_stack - data->stack );
+			return NULL;
+
+		default:
+
+			popStack( instance, instance_stack - data->stack );
+			api.setError(22, data -> tokenBuffer);
+			return NULL;
+	}
+
+	popStack( instance, instance_stack - data->stack );
+	return NULL;
+}
+
+
 char *craftFrJulia KITTENS_CMD_ARGS
 {
 	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdNormal( _craftFrJulia, tokenBuffer );
 	return tokenBuffer;
 }
 
