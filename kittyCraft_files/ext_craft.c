@@ -3137,12 +3137,12 @@ char *_craftFrWindow(  struct glueCommands *data, int nextToken )
 			}
 			return NULL;
 
+		case 4:
+			context -> fractal.window.screen = instance -> current_screen;
+			break;
+
 		case 5:
 			context -> fractal.window.screen = getStackNum( instance,__stack -4);
-			context -> fractal.window.x = getStackNum( instance,__stack -3);
-			context -> fractal.window.y = getStackNum( instance,__stack -2);
-			context -> fractal.window.width = getStackNum( instance,__stack -1);
-			context -> fractal.window.height = getStackNum( instance,__stack);
 			break;
 
 		default:
@@ -3151,6 +3151,16 @@ char *_craftFrWindow(  struct glueCommands *data, int nextToken )
 			api.setError(22, data -> tokenBuffer);
 			return NULL;
 	}
+
+	context -> fractal.window.x = 0;
+	context -> fractal.window.y = 0;
+	context -> fractal.window.width = instance -> screens[ context -> fractal.window.screen ] -> realWidth;
+	context -> fractal.window.height = instance -> screens[ context -> fractal.window.screen ] -> realHeight;
+
+	stack_get_if_int( instance, __stack-3, &context -> fractal.window.x );
+	stack_get_if_int( instance, __stack-2, &context -> fractal.window.y );
+	stack_get_if_int( instance, __stack-1, &context -> fractal.window.width );
+	stack_get_if_int( instance, __stack, &context -> fractal.window.height );
 
 	popStack( instance, instance_stack - data->stack );
 	return NULL;
