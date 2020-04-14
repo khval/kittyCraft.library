@@ -1493,10 +1493,54 @@ char *craftFileCommentSTR KITTENS_CMD_ARGS
 	return tokenBuffer;
 }
 
+char *_craftFileLength( struct glueCommands *data, int nextToken )
+{
+	struct KittyInstance *instance = data -> instance;
+	int args = instance_stack - data->stack +1;
+	struct ExamineData *fdata = NULL;
+
+	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+
+	if (args !=1)
+	{
+		popStack( instance, instance_stack - data->stack );
+		api.setError(22, data -> tokenBuffer);
+		return NULL;
+	}
+	else
+	{
+		struct stringData *file = getStackString( instance,__stack);
+		if (file)
+		{
+			BPTR filehandle;
+			int64 filesize = 0;
+
+			filehandle = Lock( &file -> ptr, SHARED_LOCK );
+			if (filehandle)
+			{
+				filesize = GetFileSize( filehandle );
+				UnLock( filehandle );
+			}
+
+			if (filesize>=0x7FFFFFFF)
+			{
+				setStackNum( instance , (int) filesize );
+			}
+			else
+			{
+				setStackDecimal( instance, (double) filesize );
+			}
+		}
+	}
+
+	return NULL;
+}
+
+
 char *craftFileLength KITTENS_CMD_ARGS
 {
 	dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-	api.setError(22, tokenBuffer);
+	stackCmdParm( _craftFileLength, tokenBuffer );
 	return tokenBuffer;
 }
 char *craftFileType KITTENS_CMD_ARGS
