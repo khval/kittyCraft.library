@@ -1470,31 +1470,19 @@ char *_craftFileCommentSTR( struct glueCommands *data, int nextToken )
 	}
 	else
 	{
-
-dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-
 		struct stringData *file = getStackString( instance,__stack);
 		if (file)
 		{
-
-dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 			fdata =ExamineObjectTags( EX_StringNameInput, &file -> ptr, TAG_END );
 			if (fdata)
 			{
-
-dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 				setStackStr( instance, toAmosString( fdata -> Comment, strlen( fdata -> Comment ) ) ) ;
 				FreeDosObject(DOS_EXAMINEDATA,fdata); 
 				fdata = NULL;
 			}
-
-dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
-
-			return NULL;
 		}
 	}
 
-	api.setError(22, data -> tokenBuffer);
 	return NULL;
 }
 
