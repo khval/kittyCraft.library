@@ -1522,7 +1522,7 @@ char *_craftFileLength( struct glueCommands *data, int nextToken )
 				UnLock( filehandle );
 			}
 
-			if (filesize>=0x7FFFFFFF)
+			if (filesize<=0x7FFFFFFF)
 			{
 				setStackNum( instance , (int) filesize );
 			}
