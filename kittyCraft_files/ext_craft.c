@@ -38,7 +38,7 @@
 #define alloc_private(x) AllocVecTags( x , AVT_Type, MEMF_PRIVATE, TAG_END )
 #define alloc_shared(x) AllocVecTags( x , AVT_Type, MEMF_SHARED, TAG_END )
 
-#define proc_names_dprintf dprintf
+#define proc_names_printf dprintf
 
 #define max(a,b) ((a)>(b)?(a):(b))
 
@@ -62,7 +62,7 @@ char *_craftUpCaseSTR(  struct glueCommands *data, int nextToken )
 	struct stringData *str;
 	char *s;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=1)
 	{
@@ -95,7 +95,7 @@ char *_craftLoCaseSTR( struct glueCommands *data, int nextToken )
 	struct stringData *str;
 	char *s;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=1)
 	{
@@ -127,7 +127,7 @@ char *_craftFlipCaseSTR( struct glueCommands *data, int nextToken )
 	struct stringData *str;
 	char *s;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=1)
 	{
@@ -170,7 +170,7 @@ char *_craftLeftTrimSTR( struct glueCommands *data, int nextToken )
 	struct stringData *str,*remove;
 	struct stringData *newStr;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -261,7 +261,7 @@ char *_craftRightTrimSTR( struct glueCommands *data, int nextToken )
 	struct stringData *str,*remove;
 	struct stringData *newStr;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -353,22 +353,22 @@ char *_craftBwInstr(  struct glueCommands *data, int nextToken )
 	struct stringData *txt=NULL,*item=NULL;
 	int size;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
 	switch (args)
 	{
 		case 2:
-			txt = getStackString( instance,__stack-1 );
-			item = getStackString( instance,__stack );
+			txt = getStackString( instance,instance_stack-1 );
+			item = getStackString( instance,instance_stack );
 			size = txt->size;
 			break;
 
 		case 3:
-			txt = getStackString( instance,__stack-2 );
-			item = getStackString( instance,__stack-1 );
-			size = getStackNum( instance,__stack );
+			txt = getStackString( instance,instance_stack-2 );
+			item = getStackString( instance,instance_stack-1 );
+			size = getStackNum( instance,instance_stack );
 			size = size < txt->size ? size : txt->size;
 			break;
 
@@ -420,7 +420,7 @@ char *_craftChrConvSTR(  struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	switch (args)
 	{
@@ -468,7 +468,7 @@ char *_craftStrCount(  struct glueCommands *data, int nextToken )
 	struct stringData *txt=NULL,*item=NULL;
 	int size;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -518,7 +518,7 @@ char *_craftMemStrCount(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	int cnt = 0;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -594,7 +594,7 @@ char *_craftStrScrambleSTR(  struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	dprintf("args: %d\n",args);
 
@@ -648,7 +648,7 @@ char *_craftHexDumpSTR(  struct glueCommands *data, int nextToken )
 	char *adr = NULL;
 	int len = 0, sep =0;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	dprintf("args: %d\n",args);
 
@@ -717,7 +717,7 @@ char *_craftChrDumpSTR(  struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	switch (args)
 	{
@@ -771,7 +771,7 @@ char *_craftStrPeekSTR(  struct glueCommands *data, int nextToken )
 	struct stringData *newStr;
 	unsigned char *dest;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	dprintf("args: %d\n",args);
 
@@ -860,7 +860,7 @@ char *_craftStrPoke(  struct glueCommands *data, int nextToken )
 	struct stringData *str;
 	int n;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -918,7 +918,7 @@ char *_craftMemCopy(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	unsigned char *addressSource,*addressEnd,*addressDest;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	switch (args)
 	{
@@ -959,7 +959,7 @@ char *_craftMemType( struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	char *adr;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=1)
 	{
@@ -987,7 +987,7 @@ char *_craftMemScramble(  struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	dprintf("args: %d\n",args);
 
@@ -1060,7 +1060,7 @@ char *_craftDrPathSTR( struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=1)
 	{
@@ -1167,7 +1167,7 @@ char *_craftDbFree(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	uint64 ret;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -1206,7 +1206,7 @@ char *_craftDbUsed(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	uint64 ret;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	dprintf("args: %d\n",args);
 
@@ -1243,7 +1243,7 @@ char *_craftDbSize(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	uint64 ret;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	dprintf("args: %d\n",args);
 
@@ -1280,7 +1280,7 @@ char *_craftDiscState(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	struct stringData  *name;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	dprintf("args: %d\n",args);
 
@@ -1329,7 +1329,7 @@ char *_craftDiscTypeSTR(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	struct stringData  *name,*ret;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	dprintf("args: %d\n",args);
 
@@ -1389,7 +1389,7 @@ char *_craftFileProtect( struct glueCommands *data, int nextToken )
 
 	dprintf("instance -> current_extension: %d\n",instance -> current_extension);
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -1458,7 +1458,7 @@ char *_craftFileCommentSTR( struct glueCommands *data, int nextToken )
 
 	dprintf("instance -> current_extension: %d\n",instance -> current_extension);
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -1499,7 +1499,7 @@ char *_craftFileLength( struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	struct ExamineData *fdata = NULL;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=1)
 	{
@@ -1557,7 +1557,7 @@ char *_craftSetProtect( struct glueCommands *data, int nextToken )
 
 	dprintf("instance -> current_extension: %d\n",instance -> current_extension);
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -1590,7 +1590,7 @@ char *_craftSetComment( struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -1647,7 +1647,7 @@ char *_craftDrNameSTR( struct glueCommands *data, int nextToken )
 
 	dprintf("instance -> current_extension: %d\n",instance -> current_extension);
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -1902,7 +1902,7 @@ char *_craftSetRed( struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	dprintf("args: %d\n",args);
 
@@ -1950,7 +1950,7 @@ char *_craftPalRed( struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	uint32 v =0;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	dprintf("args: %d\n",args);
 
@@ -1988,7 +1988,7 @@ char *_craftSetGreen( struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=2)
 	{
@@ -2034,7 +2034,7 @@ char *_craftPalGreen( struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	uint32 v =0;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	dprintf("args: %d\n",args);
 
@@ -2072,7 +2072,7 @@ char *_craftSetBlue( struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=2)
 	{
@@ -2118,7 +2118,7 @@ char *_craftPalBlue( struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	uint32 v =0;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	dprintf("args: %d\n",args);
 
@@ -2156,7 +2156,7 @@ char *_craftPalSpread( struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=2)
 	{
@@ -2222,7 +2222,7 @@ char *_craftPalSwap( struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=2)
 	{
@@ -2266,7 +2266,7 @@ char *_craftPalCopy( struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=2)
 	{
@@ -2307,7 +2307,7 @@ char *_craftReserveAsPalette(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	int bankId,pals,mask;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -2359,7 +2359,7 @@ char *_craftPalCount(  struct glueCommands *data, int nextToken )
 	int _size = 0;
 	struct kittyBank *bank;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -2406,7 +2406,7 @@ char *_craftPalToBank(  struct glueCommands *data, int nextToken )
 	struct retroScreen *screen;
 	unsigned char *pal ;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	api.dumpStack();
 
@@ -2475,7 +2475,7 @@ char *_craftPalFromBank(  struct glueCommands *data, int nextToken )
 	struct retroScreen *screen;
 	unsigned char *pal ;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	switch (args)
 	{
@@ -2546,7 +2546,7 @@ char *_craftPalSwapBank(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	int bankNr=0,paletteNr=0,mask=0;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 
 	dprintf("args: %d\n",args);
@@ -2637,7 +2637,7 @@ char *_craftSetBankColour(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	int bankNr=0,paletteNr=0,colorNr=0,value=0;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	switch (args)
 	{
@@ -2698,7 +2698,7 @@ char *_craftBankColour(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	int bankNr=0,paletteNr=0,colorNr=0;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	dprintf("args: %d\n",args);
 
@@ -2751,7 +2751,7 @@ char *_craftDelBankColour(  struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	int bankNr=0,paletteNr=0,colorNr=0;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	dprintf("args: %d\n",args);
 
@@ -3058,7 +3058,7 @@ char *_craftFrPosition( struct glueCommands *data, int nextToken )
 	struct context *context = instance -> extensions_context[ instance -> current_extension ];
 	int args = instance_stack - data->stack +1;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=2)
 	{
@@ -3102,7 +3102,7 @@ char *_craftFrStep( struct glueCommands *data, int nextToken )
 	struct context *context = instance -> extensions_context[ instance -> current_extension ];
 	int args = instance_stack - data->stack +1;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	switch (args)
 	{
@@ -3150,7 +3150,7 @@ char *_craftFrWindow(  struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	struct context *context = instance -> extensions_context[ instance -> current_extension ];
 	int args = instance_stack - data->stack +1;
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	switch (args)
 	{
@@ -3217,7 +3217,7 @@ char *_craftFrScan(  struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	struct context *context = instance -> extensions_context[ instance -> current_extension ];
 	int args = instance_stack - data->stack +1;
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	switch (args)
 	{
@@ -3254,7 +3254,7 @@ char *_craftFrJulia(  struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	struct context *context = instance -> extensions_context[ instance -> current_extension ];
 	int args = instance_stack - data->stack +1;
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	switch (args)
 	{
@@ -3299,7 +3299,7 @@ char *_craftFrMandelbrot(  struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	struct context *context = instance -> extensions_context[ instance -> current_extension ];
 	int args = instance_stack - data->stack +1;
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	switch (args)
 	{
@@ -3355,7 +3355,7 @@ char *_craftCliExecute( struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	switch (args)
 	{
@@ -3410,7 +3410,7 @@ char *_craftCliPrint( struct glueCommands *data, int nextToken )
 	struct KittyInstance *instance = data -> instance;
 	int args = instance_stack - data->stack +1;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	switch (args)
 	{
@@ -3450,7 +3450,7 @@ char *_craftGuruAlert( struct glueCommands *data, int nextToken )
 	uint32 ret;
 	struct stringData *argStr[5];
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	switch (args)
 	{
@@ -3534,7 +3534,7 @@ char *_craftSetAmosPri( struct glueCommands *data, int nextToken )
 	struct Task *task;
 	uint32 pri;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	switch (args)
 	{
@@ -3602,7 +3602,7 @@ char *_craftSysRequest( struct glueCommands *data, int nextToken )
 	struct stringData *argStr[6];
 	struct stringData *ok,*cancel;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	switch (args)
 	{
@@ -3792,7 +3792,7 @@ char *_craftB_swap( struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	uint32 ret;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=1)
 	{
@@ -3822,7 +3822,7 @@ char *_craftW_swap( struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	uint32 ret;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=1)
 	{
@@ -3853,7 +3853,7 @@ char *_craftL_swap( struct glueCommands *data, int nextToken )
 	int args = instance_stack - data->stack +1;
 	uint32 ret;
 
-	proc_names_dprintf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
+	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if (args !=1)
 	{
