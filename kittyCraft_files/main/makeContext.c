@@ -64,7 +64,6 @@ void * _kittycraft_makeContext(struct kittyCraftIFace *Self)
 	if (context)
 	{
 		bzero( context, sizeof(struct context) );
-		printf("context -> used_dir_contexts: %d\n", (unsigned int) context -> used_dir_contexts);
 
 		context -> fractal.x = -20000;
 		context -> fractal.y = -12800;

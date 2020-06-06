@@ -134,8 +134,8 @@ void popStack( this_instance_first int n)
 {
 	struct kittyData *s,*i,*e;
 	int _s;
-
 	_s = instance_stack-n ;
+
 	if (_s<0) _s=0;
 
 	s = &kittyStack[_s];

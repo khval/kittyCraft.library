@@ -773,8 +773,6 @@ char *_craftStrPeekSTR(  struct glueCommands *data, int nextToken )
 
 	proc_names_printf("%s:%s:%d\n",__FILE__,__FUNCTION__,__LINE__);
 
-	dprintf("args: %d\n",args);
-
 	switch (args)
 	{
 		case 2:
@@ -814,16 +812,11 @@ char *_craftStrPeekSTR(  struct glueCommands *data, int nextToken )
 		{
 			dest[n]=adr[n];
 		}
-
-		dprintf("written\n");
 	}
 	else
 	{
 		int n;
 		unsigned char c;
-
-		dprintf("len %d termchar %c\n",len,termchar);
-
 		for (n=0;n<len;n++)
 		{
 			c=adr[n];
