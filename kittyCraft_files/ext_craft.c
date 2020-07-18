@@ -994,7 +994,7 @@ char *_craftMemScramble(  struct glueCommands *data, int nextToken )
 				struct stringData *pass = getStackString( instance,__stack );
 				struct kittyBank *bank;
 
-				bank = api.findBank( bankNr );
+				bank = api.findBankById( bankNr );
 
 				if (bank)
 				{
@@ -2371,7 +2371,7 @@ char *_craftPalCount(  struct glueCommands *data, int nextToken )
 
 	if (bankId>-1)
 	{
-		bank = api.findBank( bankId );
+		bank = api.findBankById( bankId );
 		if (bank)
 		{
 			_size = bank -> length / (256*4);
@@ -2422,7 +2422,7 @@ char *_craftPalToBank(  struct glueCommands *data, int nextToken )
 	}
 
 	pal = NULL;
-	bank = api.findBank( bankId );
+	bank = api.findBankById( bankId );
 	screen = instance -> screens[ instance -> current_screen ];
 
 	if ((bank)&&(screen)&&(palId>-1))
@@ -2489,7 +2489,7 @@ char *_craftPalFromBank(  struct glueCommands *data, int nextToken )
 	}
 
 	pal = NULL;
-	bank = api.findBank( bankId );
+	bank = api.findBankById( bankId );
 	screen = instance -> screens[ instance -> current_screen ];
 
 	if ((bank)&&(screen)&&(palId>-1))
@@ -2577,7 +2577,7 @@ char *_craftPalSwapBank(  struct glueCommands *data, int nextToken )
 		register short t;
 		int n;
 
-		bank = api.findBank( bankNr );
+		bank = api.findBankById( bankNr );
 		screen = instance -> screens[ instance -> current_screen ];
 
 		dprintf("bank: %08x\n",bank);
@@ -2652,7 +2652,7 @@ char *_craftSetBankColour(  struct glueCommands *data, int nextToken )
 
 		struct kittyBank *bank;
 
-		bank = api.findBank( bankNr );
+		bank = api.findBankById( bankNr );
 
 		if ((bank)&&(paletteNr>-1))
 		{
@@ -2714,7 +2714,7 @@ char *_craftBankColour(  struct glueCommands *data, int nextToken )
 		unsigned int *pal;
 		struct kittyBank *bank;
 
-		bank = api.findBank( bankNr );
+		bank = api.findBankById( bankNr );
 
 		if ((bank)&&(paletteNr>-1))
 		{
@@ -2767,7 +2767,7 @@ char *_craftDelBankColour(  struct glueCommands *data, int nextToken )
 		unsigned char *pal;
 		struct kittyBank *bank;
 
-		bank = api.findBank( bankNr );
+		bank = api.findBankById( bankNr );
 
 		if ((bank)&&(paletteNr>-1))
 		{
